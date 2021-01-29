@@ -11,6 +11,7 @@ class MyDocument extends Document {
 			<Html>
 				<Head>
 					<link rel="stylesheet" href="https://use.typekit.net/itz0hpy.css" />
+					<link rel="icon" href="/favicon.ico" />
 				</Head>
 				<body>
 					<Main />
