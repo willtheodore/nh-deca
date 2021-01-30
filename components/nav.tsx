@@ -20,6 +20,7 @@ export default function Nav() {
   }, []);
   const initialize = async () => {
     const res = await getSections();
+    if (!res) return;
     setSections(res);
   };
 
@@ -27,7 +28,7 @@ export default function Nav() {
     <>
       <div
         className="fixed top-0 flex z-10 items-center justify-between h-16 tablet:h-20 w-full 
-		bg-blueSteel bg-blur px-4 tablet:px-8 tablet:bg-transparent"
+		blueSteel bg-blur px-4 tablet:px-8 tablet:bg-transparent"
       >
         <img
           className="h-2/5 tablet:h-3/5"

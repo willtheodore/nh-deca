@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import * as React from "react";
 import { Section } from "../utils/firestore";
+import Footer from "./footer";
 import Nav from "./nav";
 
 interface LayoutProps {
@@ -23,12 +24,13 @@ export default function Layout({ hero, children }: LayoutProps) {
       <Nav />
       <div
         className={classNames({
-          "w-screen": true,
+          "w-screen grid": true,
           "phone-offset tablet:mt-screen-3/4": hero,
         })}
       >
         {children}
       </div>
+      <Footer />
     </>
   );
 }
