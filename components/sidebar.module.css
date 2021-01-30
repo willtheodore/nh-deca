@@ -1,0 +1,22 @@
+.constant {
+  @apply px-5 bg-decaBlue fixed top-0 right-0 z-10 transition transform translate-x-full;
+
+  width: calc(50vw + 4rem);
+  height: 50rem;
+}
+
+.active {
+  @apply translate-x-0;
+}
+
+.spacer {
+  @apply h-10;
+}
+
+.disclosureHeader {
+  @apply flex justify-between text-white uppercase tracking-wider font-bold w-full;
+}
+
+.linkConstant {
+  @apply text-white transition duration-500;
+}

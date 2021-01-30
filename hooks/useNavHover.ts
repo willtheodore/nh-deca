@@ -6,8 +6,12 @@ const useNavHover = (): [boolean, any, any] => {
 	const [secondaryHover, setSecondaryHover] = useState(false);
 
 	const primaryProps = {
-		onMouseOver: () => setPrimaryHover(true),
-		onMouseOut: () => setPrimaryHover(false),
+		onMouseOver: () => {
+			setPrimaryHover(true);
+		},
+		onMouseOut: () => {
+			setPrimaryHover(false);
+		},
 	};
 
 	const secondaryProps = {
@@ -20,13 +24,8 @@ const useNavHover = (): [boolean, any, any] => {
 	};
 
 	useEffect(() => {
-		setTimeout(() => {
-			if (primaryHover || secondaryHover) {
-				setHover(true);
-			} else {
-				setHover(false);
-			}
-		}, 100);
+		if (primaryHover || secondaryHover) setHover(true);
+		else setHover(false);
 	}, [primaryHover, secondaryHover]);
 
 	return [hover, primaryProps, secondaryProps];
