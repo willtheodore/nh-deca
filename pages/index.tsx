@@ -2,6 +2,7 @@ import { GetStaticPropsContext } from "next";
 import Head from "next/head";
 import React from "react";
 import ClearButton from "../components/clearButton";
+import Layout from "../components/layout";
 import StoryPreview from "../components/storyPreview";
 import { BannerSchema, getHomeContent, HomeContent } from "../utils/firestore";
 
@@ -26,28 +27,30 @@ export default function Home({ homeContent }: HomeProps) {
         <title>NH DECA</title>
       </Head>
 
-      {homeContent && (
-        <>
-          <Banner banner={homeContent.banner} />
-          <div className="mx-5 tablet:mx-10 my-5 tablet:my-10">
-            <h1 className="header-caps-bold text-white mb-5 tablet:mb-10">
-              Recent Stories:
-            </h1>
-            <div className="flex flex-col tablet:flex-row space-y-5 tablet:space-x-5 tablet:space-y-0">
-              <StoryPreview />
-              <StoryPreview />
-              <StoryPreview />
+      <Layout hero="/images/hero.png" title="hero">
+        {homeContent && (
+          <>
+            <Banner banner={homeContent.banner} />
+            <div className="mx-5 tablet:mx-10 my-5 tablet:my-10">
+              <h1 className="header-caps-bold text-white mb-5 tablet:mb-10">
+                Recent Stories:
+              </h1>
+              <div className="flex flex-col tablet:flex-row space-y-5 tablet:space-x-5 tablet:space-y-0">
+                <StoryPreview />
+                <StoryPreview />
+                <StoryPreview />
+              </div>
             </div>
-          </div>
-          <PhotoAlbumPreview
-            photos={[
-              "images/highlight1.jpg",
-              "images/highlight2.png",
-              "images/highlight3.jpg",
-            ]}
-          />
-        </>
-      )}
+            <PhotoAlbumPreview
+              photos={[
+                "images/highlight1.jpg",
+                "images/highlight2.png",
+                "images/highlight3.jpg",
+              ]}
+            />
+          </>
+        )}
+      </Layout>
     </>
   );
 }

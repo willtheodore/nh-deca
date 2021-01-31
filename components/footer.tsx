@@ -12,21 +12,21 @@ export default function Footer() {
           href="https://www.facebook.com/NHDECA/"
           target="__blank"
         >
-          <img className="w-8 h-8" src="/svg/facebook.svg" />
+          <img className="w-8 h-8 shadow-xl" src="/svg/facebook.svg" />
         </a>
         <a
           className="cursor-pointer"
           href="https://twitter.com/NHDECA"
           target="__blank"
         >
-          <img className="w-8 h-8" src="/svg/twitter.svg" />
+          <img className="w-8 h-8 shadow-xl" src="/svg/twitter.svg" />
         </a>
         <a
           className="cursor-pointer"
           href="https://www.instagram.com/nh__deca/"
           target="__blank"
         >
-          <img className="w-8 h-8" src="/svg/instagram.svg" />
+          <img className="w-8 h-8 shadow-xl" src="/svg/instagram.svg" />
         </a>
       </div>
     </div>

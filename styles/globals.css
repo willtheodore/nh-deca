@@ -47,3 +47,9 @@ html {
 .header-caps-bold {
   @apply uppercase text-2xl tablet:text-4xl font-bold  tracking-widest;
 }
+
+.page-content-container {
+  @apply mx-5 px-10 mt-5 py-8 prose bg-gray-100 rounded-lg transform translate-y-5;
+
+  max-width: 100% !important;
+}

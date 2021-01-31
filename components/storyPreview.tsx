@@ -2,7 +2,7 @@ import * as React from "react";
 
 export default function StoryPreview() {
   return (
-    <div className="rounded-lg bg-gray-50 p-5">
+    <div className="rounded-lg bg-gray-50 p-5 shadow-xl">
       <h1 className="font-bold text-2xl tablet:text-3xl">Story Preview</h1>
       <hr className="my-3 tablet:my-5 h-2 w-6 bg-black" />
       <p className="line-clamp-6">

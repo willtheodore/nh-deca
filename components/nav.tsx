@@ -30,11 +30,15 @@ export default function Nav() {
         className="fixed top-0 flex z-10 items-center justify-between h-16 tablet:h-20 w-full 
 		blueSteel bg-blur px-4 tablet:px-8 tablet:bg-transparent"
       >
-        <img
-          className="h-2/5 tablet:h-3/5"
-          alt="NH DECA Logo - White"
-          src="/svg/nhdecaWhite.svg"
-        />
+        <Link href="/">
+          <a>
+            <img
+              className="h-2/5 tablet:h-3/5"
+              alt="NH DECA Logo - White"
+              src="/svg/nhdecaWhite.svg"
+            />
+          </a>
+        </Link>
 
         {breakpoint === "phone" ? (
           <>
