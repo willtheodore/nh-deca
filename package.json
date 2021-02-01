@@ -8,10 +8,12 @@
     "start": "next start"
   },
   "dependencies": {
+    "@tailwindcss/forms": "^0.2.1",
     "@tailwindcss/line-clamp": "^0.2.0",
     "@tailwindcss/typography": "^0.4.0",
     "@types/dompurify": "^2.2.1",
     "@types/marked": "^1.2.2",
+    "@types/yup": "^0.29.11",
     "autoprefixer": "^10.2.3",
     "classnames": "^2.2.6",
     "firebase": "^8.2.5",
@@ -22,7 +24,8 @@
     "postcss-flexbugs-fixes": "^5.0.2",
     "react": "17.0.1",
     "react-dom": "17.0.1",
-    "tailwindcss": "^2.0.2"
+    "tailwindcss": "^2.0.2",
+    "yup": "^0.32.8"
   },
   "devDependencies": {
     "@types/classnames": "^2.2.11",

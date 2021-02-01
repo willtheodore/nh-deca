@@ -1,0 +1,37 @@
+.wrapper {
+  @apply flex flex-col w-full h-screen items-center justify-center;
+}
+
+.header {
+  @apply uppercase font-bold text-3xl text-center text-gray-100 mb-2;
+}
+
+.box {
+  @apply bg-gray-100 rounded-md py-5 px-5;
+}
+
+.form {
+  @apply flex flex-col justify-start w-80;
+}
+
+.label {
+  @apply uppercase text-xl font-bold;
+}
+
+.field {
+  @apply w-full rounded-md bg-gray-100 mb-4;
+}
+
+.blue {
+  @apply px-6 py-2 mt-2 bg-decaBlue rounded-md text-white inline uppercase font-bold tracking-wider hover:bg-blue-500 transition duration-300;
+}
+
+.error {
+  @apply text-red-500 -mt-3;
+}
+
+.clear {
+  @apply px-6 py-2 ml-2 rounded-md font-bold uppercase tracking-wider hover:bg-blue-200 transition duration-300 text-decaBlue;
+
+  box-shadow: inset 0 0 0 2px #0072ce;
+}

@@ -28,7 +28,13 @@ export default function Layout({ hero, children, title }: LayoutProps) {
             </h1>
           )}
         </div>
-      ) : null}
+      ) : (
+        <div className="w-screen bg-blue-900 px-10 py-10 mt-16 tablet:mt-20">
+          <h1 className="text-4xl tablet:text-6xl text-center tablet:text-left text-white uppercase font-semibold">
+            {title}
+          </h1>
+        </div>
+      )}
       <Nav />
       <div
         className={classNames({
