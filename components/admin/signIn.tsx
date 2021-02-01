@@ -2,14 +2,9 @@ import * as React from "react";
 import * as Yup from "yup";
 import styles from "./signIn.module.css";
 import AdminLayout from "./adminLayout";
-import {
-  ErrorMessage,
-  Field,
-  Form,
-  Formik,
-  FormikHelpers,
-  FormikValues,
-} from "formik";
+import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik";
+import { getValidationCode } from "../../utils/firestore";
+import { createUser, signInUser } from "../../utils/auth";
 
 export default function SignIn() {
   const [mode, setMode] = React.useState<"signIn" | "create">("signIn");
@@ -58,14 +53,13 @@ interface SignInFormProps {
 }
 
 interface SignInValues {
-  username: string;
+  email: string;
   password: string;
 }
 
 const SignInSchema = Yup.object().shape({
-  username: Yup.string()
-    .min(2, "Username must be 2-20 characters.")
-    .max(20, "Username must be 2-20 characters.")
+  email: Yup.string()
+    .min(2, "Email must be >2 characters.")
     .matches(/^\S*$/, "No spaces are permitted.")
     .required("This field is required."),
   password: Yup.string()
@@ -77,7 +71,7 @@ const SignInSchema = Yup.object().shape({
 
 function SignInForm({ setMode }: SignInFormProps) {
   const initialValues = {
-    username: "",
+    email: "",
     password: "",
   };
 
@@ -85,7 +79,15 @@ function SignInForm({ setMode }: SignInFormProps) {
     values: SignInValues,
     actions: FormikHelpers<SignInValues>
   ) => {
-    console.log(values);
+    const { email, password } = values;
+    const res = await signInUser(email, password);
+    if (res === "Error") {
+      actions.resetForm();
+      actions.setFieldError(
+        password,
+        "Error Signing in. Please check credentials + try again."
+      );
+    }
   };
 
   return (
@@ -95,7 +97,7 @@ function SignInForm({ setMode }: SignInFormProps) {
       validationSchema={SignInSchema}
     >
       <Form className={styles.form}>
-        <FieldBundle name="username" label="Username" type="text" />
+        <FieldBundle name="email" label="Email" type="email" />
         <FieldBundle name="password" label="Password" type="password" />
 
         <div className={styles.buttons}>
@@ -116,21 +118,20 @@ interface CreateFormProps {
 }
 
 interface CreateValues {
-  username: string;
-  confirmUsername: string;
+  email: string;
+  confirmEmail: string;
   password: string;
   confirmPassword: string;
   accountCreationCode: string;
 }
 
 const CreateSchema = Yup.object().shape({
-  username: Yup.string()
-    .min(2, "Username must be 2-20 characters.")
-    .max(20, "Username must be 2-20 characters.")
+  email: Yup.string()
+    .min(2, "Email must be >2 characters.")
     .matches(/^\S*$/, "No spaces are permitted.")
     .required("This field is required."),
-  confirmUsername: Yup.string()
-    .oneOf([Yup.ref("username"), null], "Usernames must match.")
+  confirmEmail: Yup.string()
+    .oneOf([Yup.ref("email"), null], "Emails must match.")
     .matches(/^\S*$/, "No spaces are permitted.")
     .required("This field is required."),
   password: Yup.string()
@@ -149,8 +150,8 @@ const CreateSchema = Yup.object().shape({
 
 function CreateForm({ setMode }: CreateFormProps) {
   const initialValues = {
-    username: "",
-    confirmUsername: "",
+    email: "",
+    confirmEmail: "",
     password: "",
     confirmPassword: "",
     accountCreationCode: "",
@@ -160,9 +161,20 @@ function CreateForm({ setMode }: CreateFormProps) {
     values: CreateValues,
     actions: FormikHelpers<CreateValues>
   ) => {
-    const { username, password, accountCreationCode } = values;
-    console.log(values);
-    actions.setFieldError("accountCreationCode", "Incorrect code.");
+    const { email, password, accountCreationCode } = values;
+    const code = await getValidationCode();
+    if (code !== accountCreationCode) {
+      actions.setFieldError("accountCreationCode", "Incorrect code.");
+    } else {
+      const res = await createUser(email, password);
+      if (res === "Error") {
+        actions.resetForm();
+        actions.setFieldError(
+          password,
+          "Error Creating an account. Please try again."
+        );
+      }
+    }
   };
 
   return (
@@ -172,12 +184,8 @@ function CreateForm({ setMode }: CreateFormProps) {
       validationSchema={CreateSchema}
     >
       <Form className={styles.form}>
-        <FieldBundle name="username" label="Username" type="text" />
-        <FieldBundle
-          name="confirmUsername"
-          label="Confirm Username"
-          type="text"
-        />
+        <FieldBundle name="email" label="Email" type="email" />
+        <FieldBundle name="confirmEmail" label="Confirm Email" type="email" />
         <FieldBundle name="password" label="Password" type="password" />
         <FieldBundle
           name="confirmPassword"

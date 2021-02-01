@@ -76,3 +76,19 @@ export const getPagePaths = async () => {
     console.log("Error getting paths: ", e);
   }
 };
+
+export const getValidationCode = async () => {
+  try {
+    const codeDocSnap = await db
+      .collection("adminData")
+      .doc("validationCode")
+      .get();
+    const codeDoc = codeDocSnap.data();
+    if (codeDoc) {
+      const code = codeDoc.code;
+      return code;
+    }
+  } catch (e) {
+    console.log("Error getting validation code", e);
+  }
+};
