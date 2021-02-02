@@ -1,0 +1,23 @@
+.label {
+  @apply uppercase text-white text-3xl font-semibold pt-5;
+}
+
+.field {
+  @apply rounded-sm border-none;
+}
+
+.textarea {
+  @apply h-80 p-5 rounded-md w-full;
+}
+
+.helper {
+  @apply text-white opacity-50;
+}
+
+.link {
+  @apply text-blue-400 font-bold opacity-100 hover:text-blue-200 transition duration-300;
+}
+
+.submit {
+  @apply bg-decaBlue px-4 py-2 rounded-lg font-bold hover:bg-blue-400 text-white transition duration-300 inline uppercase;
+}

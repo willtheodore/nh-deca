@@ -3,7 +3,7 @@ import Head from "next/head";
 import * as React from "react";
 import marked from "marked";
 import Layout from "../components/layout";
-import { getPage, getPagePaths } from "../utils/firestore";
+import { getImageURL, getPage, getPagePaths } from "../utils/firestore";
 
 interface PageProps {
   heroURL?: string | null;
@@ -48,7 +48,6 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
 }
 
 export default function Page({ heroURL = null, title, content }: PageProps) {
-  console.log(heroURL);
   return (
     <>
       <Head>

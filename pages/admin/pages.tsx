@@ -8,6 +8,7 @@ import {
 } from "formik";
 import * as React from "react";
 import AdminLayout from "../../components/admin/adminLayout";
+import PageEditor from "../../components/admin/pageEditor";
 import { getPagesBySection, Page } from "../../utils/firestore";
 
 interface PageValues {
@@ -16,6 +17,8 @@ interface PageValues {
 }
 
 export default function Pages() {
+  const [editSlug, setEditSlug] = React.useState<string | null>(null);
+
   const initialValues: PageValues = {
     section: "home",
     page: "",
@@ -24,7 +27,10 @@ export default function Pages() {
   const handleSubmit = (
     values: PageValues,
     actions: FormikHelpers<PageValues>
-  ) => {};
+  ) => {
+    const slug = values.section.concat("\\".concat(values.page));
+    setEditSlug(slug);
+  };
 
   return (
     <AdminLayout>
@@ -34,20 +40,43 @@ export default function Pages() {
           Pick a section. Then pick a page. Then edit in the window below to
           change the content! Some pages (like the home page) will have special
           fields (like the home banner) to edit specific content.
+          <div className="pb-2" />
+          Try not to refresh the page until you're done making changes. I
+          recommend opening another tab with the page you are editing and
+          refreshing that page after you make changes on this page. Use the
+          "commit changes" button to save what you've wrote once you're done!
+          <div className="pb-2" />
+          ALWAYS REFRESH AFTER YOU COMMIT CHANGES. This will help prevent bugs.
         </h2>
 
         <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-          <Form className="text-black mt-5">
-            <Field as="select" name="section" className="rounded-md w-52">
+          <Form className="text-black mt-5 flex items-center">
+            <Field
+              as="select"
+              name="section"
+              className="rounded-md w-52 border-none"
+            >
               <option value="about">About</option>
               <option value="members">Members</option>
               <option value="conferences">Conferences</option>
               <option value="news">News</option>
               <option value="home">Home</option>
             </Field>
-            <PageSelectField name="page" className="rounded-md w-52 ml-5" />
+            <PageSelectField
+              name="page"
+              className="rounded-md w-52 ml-5 border-none"
+            />
+            <button
+              type="submit"
+              className="px-6 py-2 ml-5 rounded-md font-bold uppercase tracking-wider bg-decaBlue hover:bg-blue-500 
+                         transition duration-300 text-white"
+            >
+              Submit
+            </button>
           </Form>
         </Formik>
+
+        {editSlug && <PageEditor slug={editSlug} />}
       </div>
     </AdminLayout>
   );
@@ -60,9 +89,11 @@ function PageSelectField(props: any) {
   } = useFormikContext();
   const [field] = useField(props);
   const [options, setOptions] = React.useState<Page[] | null>(null);
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
-    if (section && touched.section && section !== "home") {
+    if (section && section !== "home") {
+      setLoading(true);
       getOptions();
     }
   }, [section, touched.section, props.name]);
@@ -71,12 +102,18 @@ function PageSelectField(props: any) {
     if (sectionArray) {
       setOptions(sectionArray);
     }
+    setLoading(false);
   };
+
+  if (loading)
+    return (
+      <img className="animate-spin ml-2" src="/svg/cached.svg" alt="loading" />
+    );
 
   if (options !== null && section !== "home")
     return (
       <select {...field} {...props}>
-        {options.map((page, index) => (
+        {options.map((page) => (
           <option key={page.slug} value={page.slug}>
             {page.label}
           </option>

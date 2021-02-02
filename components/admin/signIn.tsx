@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Yup from "yup";
-import styles from "./signIn.module.css";
+import styles from "./admin.module.css";
 import AdminLayout from "./adminLayout";
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik";
 import { getValidationCode } from "../../utils/firestore";

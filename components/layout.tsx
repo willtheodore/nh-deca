@@ -1,28 +1,44 @@
 import classNames from "classnames";
 import * as React from "react";
+import { getImageURL } from "../utils/firestore";
 import Footer from "./footer";
 import Nav from "./nav";
 
 interface LayoutProps {
   children: React.ReactChild;
   hero?: string | null;
+  home?: string;
   title?: string;
 }
 
-export default function Layout({ hero, children, title }: LayoutProps) {
+export default function Layout({ hero, children, title, home }: LayoutProps) {
+  const [heroURL, setHeroURL] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (hero) {
+      getHeroURL();
+    }
+  }, [hero]);
+  const getHeroURL = async () => {
+    if (hero) {
+      const url = await getImageURL(hero);
+      setHeroURL(url);
+    }
+  };
+
   return (
     <>
-      {hero ? (
+      {heroURL || home ? (
         <div className="w-full absolute top-0 transform translate-y-16 tablet:transform-none tablet:h-screen-3/4 h-screen-1/3">
           <img
             className="object-cover h-full w-full"
             alt="Hero Image - NH DECA"
-            src={hero}
+            src={heroURL ? heroURL : home}
           />
           {title && (
             <h1
               className="font-bold text-2xl tablet:text-6xl absolute bottom-1/2 right-1/2 transform translate-y-1/2 translate-x-1/2 
-                         bg-blur text-white uppercase px-6 py-3 tablet:px-10 tablet:py-5 rounded-md"
+                         bg-blur text-white uppercase px-6 py-3 tablet:px-10 tablet:py-5 rounded-md text-center"
             >
               {title}
             </h1>
@@ -39,7 +55,7 @@ export default function Layout({ hero, children, title }: LayoutProps) {
       <div
         className={classNames({
           "w-screen": true,
-          "phone-offset tablet:mt-screen-3/4": hero,
+          "phone-offset tablet:mt-screen-3/4": hero || home,
         })}
       >
         {children}

@@ -49,7 +49,7 @@ html {
 }
 
 .page-content-container {
-  @apply mx-5 px-10 mt-5 py-8 prose bg-gray-100 rounded-lg transform translate-y-5;
+  @apply mx-auto px-10 mt-5 py-8 prose tablet:prose-xl bg-gray-100 rounded-lg transform translate-y-5;
 
-  max-width: 100% !important;
+  max-width: 120ch !important;
 }

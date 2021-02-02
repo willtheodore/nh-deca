@@ -9,7 +9,7 @@ export default function AdminNav() {
   };
 
   return (
-    <div className="flex items-center px-5 bg-decaBlue fixed top-0 inset-x-0 h-20 justify-between">
+    <div className="flex items-center px-5 bg-decaBlue fixed top-0 inset-x-0 h-20 justify-between z-30">
       <AdminNavLink white slug="/" label="< Website home" />
 
       <div className="flex items-center space-x-2">

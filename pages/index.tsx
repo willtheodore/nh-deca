@@ -27,7 +27,7 @@ export default function Home({ homeContent }: HomeProps) {
         <title>NH DECA</title>
       </Head>
 
-      <Layout hero="/images/hero.png">
+      <Layout home="/images/hero.png">
         {homeContent && (
           <>
             <Banner banner={homeContent.banner} />
