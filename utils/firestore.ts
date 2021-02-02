@@ -7,6 +7,8 @@ export interface Section {
 
 export interface Page {
   label: string;
+  index: number;
+  slug?: string;
 }
 
 export const getSections = async () => {
@@ -90,5 +92,26 @@ export const getValidationCode = async () => {
     }
   } catch (e) {
     console.log("Error getting validation code", e);
+  }
+};
+
+export const getPagesBySection = async (section: string) => {
+  try {
+    const sectionData = (
+      await db.collection("sections").doc(section).get()
+    ).data();
+    if (sectionData) {
+      const sectionArray: Page[] = [];
+      for (const slug in sectionData) {
+        const page = sectionData[slug];
+        sectionArray.push({
+          slug,
+          ...page,
+        });
+      }
+      return sectionArray;
+    }
+  } catch (e) {
+    console.log("Error getting pages", e);
   }
 };

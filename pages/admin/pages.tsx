@@ -1,15 +1,23 @@
-import { Formik, FormikHelpers } from "formik";
+import {
+  Field,
+  Form,
+  Formik,
+  FormikHelpers,
+  useField,
+  useFormikContext,
+} from "formik";
 import * as React from "react";
 import AdminLayout from "../../components/admin/adminLayout";
+import { getPagesBySection, Page } from "../../utils/firestore";
 
 interface PageValues {
-  section: "About" | "Members" | "Conferences" | "News" | "Home";
+  section: "about" | "members" | "conferences" | "news" | "home";
   page: string;
 }
 
 export default function Pages() {
   const initialValues: PageValues = {
-    section: "Home",
+    section: "home",
     page: "",
   };
 
@@ -28,8 +36,53 @@ export default function Pages() {
           fields (like the home banner) to edit specific content.
         </h2>
 
-        <Formik initialValues={initialValues} onSubmit={handleSubmit}></Formik>
+        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+          <Form className="text-black mt-5">
+            <Field as="select" name="section" className="rounded-md w-52">
+              <option value="about">About</option>
+              <option value="members">Members</option>
+              <option value="conferences">Conferences</option>
+              <option value="news">News</option>
+              <option value="home">Home</option>
+            </Field>
+            <PageSelectField name="page" className="rounded-md w-52 ml-5" />
+          </Form>
+        </Formik>
       </div>
     </AdminLayout>
   );
+}
+
+function PageSelectField(props: any) {
+  const {
+    values: { section },
+    touched,
+  } = useFormikContext();
+  const [field] = useField(props);
+  const [options, setOptions] = React.useState<Page[] | null>(null);
+
+  React.useEffect(() => {
+    if (section && touched.section && section !== "home") {
+      getOptions();
+    }
+  }, [section, touched.section, props.name]);
+  const getOptions = async () => {
+    const sectionArray = await getPagesBySection(section);
+    if (sectionArray) {
+      setOptions(sectionArray);
+    }
+  };
+
+  if (options !== null && section !== "home")
+    return (
+      <select {...field} {...props}>
+        {options.map((page, index) => (
+          <option key={page.slug} value={page.slug}>
+            {page.label}
+          </option>
+        ))}
+      </select>
+    );
+
+  return <></>;
 }

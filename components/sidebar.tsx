@@ -2,8 +2,8 @@ import cn from "classnames";
 import styles from "./sidebar.module.css";
 import * as React from "react";
 import Link from "next/link";
-import { Section } from "../utils/firestore";
-import { getLabels, getSlugs } from "./nav";
+import { Page, Section } from "../utils/firestore";
+import { getPages } from "./nav";
 
 interface SidebarProps {
   active: boolean;
@@ -27,8 +27,7 @@ export default function Sidebar({ active, sections }: SidebarProps) {
             <DisclosureLinks
               open={open}
               prefix="about"
-              slugs={getSlugs(sections[0])}
-              labels={getLabels(sections[0])}
+              pages={getPages(sections[0])}
             />
           ) : (
             <></>
@@ -43,8 +42,7 @@ export default function Sidebar({ active, sections }: SidebarProps) {
             <DisclosureLinks
               open={open}
               prefix="members"
-              slugs={getSlugs(sections[1])}
-              labels={getLabels(sections[1])}
+              pages={getPages(sections[1])}
             />
           ) : (
             <></>
@@ -59,8 +57,7 @@ export default function Sidebar({ active, sections }: SidebarProps) {
             <DisclosureLinks
               open={open}
               prefix="conferences"
-              slugs={getSlugs(sections[2])}
-              labels={getLabels(sections[2])}
+              pages={getPages(sections[2])}
             />
           ) : (
             <></>
@@ -75,8 +72,7 @@ export default function Sidebar({ active, sections }: SidebarProps) {
             <DisclosureLinks
               open={open}
               prefix="news"
-              slugs={getSlugs(sections[3])}
-              labels={getLabels(sections[3])}
+              pages={getPages(sections[3])}
             />
           ) : (
             <></>
@@ -116,18 +112,10 @@ function DisclosureGroup({ header, render }: DisclosureGroupProps) {
 interface DisclosureLinksProps {
   open: boolean;
   prefix: string;
-  slugs: string[];
-  labels: string[];
+  pages: Page[];
 }
 
-function DisclosureLinks({
-  open,
-  slugs,
-  prefix,
-  labels,
-}: DisclosureLinksProps) {
-  if (slugs.length !== labels.length) return null;
-
+function DisclosureLinks({ open, prefix, pages }: DisclosureLinksProps) {
   return (
     <ul
       className={cn({
@@ -135,11 +123,11 @@ function DisclosureLinks({
         "transition transform translate-x-64": !open,
       })}
     >
-      {slugs.map((slug, index) => (
-        <Link href={`${prefix}/${slug}`}>
-          <a className="text-white" key={slug}>
-            <li className="mt-1" key={slug}>
-              {labels[index]}
+      {pages.map((page) => (
+        <Link href={`${prefix}/${page.slug}`}>
+          <a className="text-white" key={page.slug}>
+            <li className="mt-1" key={page.slug}>
+              {page.label}
             </li>
           </a>
         </Link>

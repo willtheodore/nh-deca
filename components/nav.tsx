@@ -3,7 +3,7 @@ import cn from "classnames";
 import Link from "next/link";
 import useBreakpoint from "../hooks/useBreakpoint";
 import useNavHover from "../hooks/useNavHover";
-import { getSections, Section } from "../utils/firestore";
+import { getSections, Page, Section } from "../utils/firestore";
 import Sidebar from "./sidebar";
 
 export default function Nav() {
@@ -61,8 +61,7 @@ export default function Nav() {
                   hoverProps={aboutSecondary}
                   hover={aboutHover}
                   prefix="about/"
-                  slugs={getSlugs(sections[0])}
-                  labels={getLabels(sections[0])}
+                  pages={getPages(sections[0])}
                 />
               </NavLink>
 
@@ -71,8 +70,7 @@ export default function Nav() {
                   hoverProps={membersSecondary}
                   hover={membersHover}
                   prefix="members/"
-                  slugs={getSlugs(sections[1])}
-                  labels={getLabels(sections[1])}
+                  pages={getPages(sections[1])}
                 />
               </NavLink>
 
@@ -81,8 +79,7 @@ export default function Nav() {
                   hoverProps={confSecondary}
                   hover={confHover}
                   prefix="conferences/"
-                  slugs={getSlugs(sections[2])}
-                  labels={getLabels(sections[2])}
+                  pages={getPages(sections[2])}
                 />
               </NavLink>
 
@@ -91,8 +88,7 @@ export default function Nav() {
                   hoverProps={newsSecondary}
                   hover={newsHover}
                   prefix="news/"
-                  slugs={getSlugs(sections[3])}
-                  labels={getLabels(sections[3])}
+                  pages={getPages(sections[3])}
                 />
               </NavLink>
 
@@ -141,21 +137,12 @@ function NavLink({ slug, text, isActive, hoverProps, children }: NavLinkProps) {
 
 interface NavTooltipProps {
   prefix: string;
-  slugs: string[];
-  labels: string[];
+  pages: Page[];
   hoverProps: any;
   hover: boolean;
 }
 
-function NavTooltip({
-  slugs,
-  labels,
-  prefix,
-  hoverProps,
-  hover,
-}: NavTooltipProps) {
-  if (slugs.length !== labels.length) return null;
-
+function NavTooltip({ pages, prefix, hoverProps, hover }: NavTooltipProps) {
   return (
     <ul
       className={`flex flex-col space-y-2 absolute top-18 bg-gray-200 rounded-b-lg p-4 w-60 text-black duration-300 transition-opacity ${
@@ -163,28 +150,25 @@ function NavTooltip({
       }`}
       {...hoverProps}
     >
-      {slugs.map((slug, index) => (
-        <li key={slug}>
-          <Link href={prefix.concat(slug)}>
-            <a className={`hover:text-blue-600`}>{labels[index]}</a>
+      {pages.map((page) => (
+        <li key={page.slug}>
+          <Link href={prefix.concat(page.slug!)}>
+            <a className={`hover:text-blue-600`}>{page.label}</a>
           </Link>
         </li>
       ))}
     </ul>
   );
 }
-export const getSlugs = (section: Section) => {
-  const slugs = [];
+export const getPages = (section: Section) => {
+  const pages = [];
   for (const slug in section) {
-    slugs.push(slug);
+    const page = section[slug];
+    pages.push({
+      slug,
+      ...page,
+    });
   }
-  return slugs;
-};
-
-export const getLabels = (section: Section) => {
-  const labels = [];
-  for (const page in section) {
-    labels.push(section[page].label);
-  }
-  return labels;
+  pages.sort((page1, page2) => page1.index - page2.index);
+  return pages;
 };

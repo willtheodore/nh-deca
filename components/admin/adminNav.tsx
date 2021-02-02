@@ -12,7 +12,7 @@ export default function AdminNav() {
     <div className="flex items-center px-5 bg-decaBlue fixed top-0 inset-x-0 h-20 justify-between">
       <AdminNavLink white slug="/" label="< Website home" />
 
-      <div className="flex items-center">
+      <div className="flex items-center space-x-2">
         <AdminNavLink slug="/admin/photos" label="photos" />
         <AdminNavLink slug="/admin/sections" label="sections" />
         <AdminNavLink slug="/admin/pages" label="pages" />
@@ -39,7 +39,7 @@ function AdminNavLink({ slug, white, label }: AdminNavLinkProps) {
     <Link href={slug}>
       <a
         className={classNames({
-          "px-6 py-2 mt-2 rounded-md inline uppercase tracking-wider transition duration-300": true,
+          "px-6 py-2 mt-2 rounded-md inline uppercase tracking-wider transition duration-300 shadow-md": true,
           "text-decaBlue bg-gray-100 hover:bg-blue-100": white,
           "text-white hover:bg-blue-500": !white,
         })}
