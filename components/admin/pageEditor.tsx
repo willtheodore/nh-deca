@@ -14,19 +14,25 @@ import {
   PageContent,
   updatePageContent,
 } from "../../utils/firestore";
+import HomeEditor from "./homeEditor";
 
 interface PageEditorProps {
   slug: string;
 }
 
+interface PageEditorValues {
+  title: string;
+  slug: string;
+  heroURL: string | null;
+  files: string[];
+  content: string;
+}
+
 export default function PageEditor({ slug }: PageEditorProps) {
-  const [pageContent, setPageContent] = React.useState<PageContent | null>(
+  const [initialValues, setInitialValues] = React.useState<PageContent | null>(
     null
   );
-  const [file, setFile] = React.useState<FileList | null>(null);
-  const [attachedFiles, setAttachedFiles] = React.useState<FileList | null>(
-    null
-  );
+  const [file, setFile] = React.useState<File | null>(null);
   const [submitting, setSubmitting] = React.useState(false);
 
   React.useEffect(() => {
@@ -37,8 +43,14 @@ export default function PageEditor({ slug }: PageEditorProps) {
   const getContent = async () => {
     const res = await getContentBySlug(slug);
     if (res) {
-      setPageContent(null);
-      setPageContent(res);
+      setInitialValues(null);
+      setInitialValues({
+        title: res.title,
+        slug: res.slug,
+        heroURL: res.heroURL ? res.heroURL : null,
+        files: res.files ? res.files : [],
+        content: res.content,
+      });
     }
   };
 
@@ -54,11 +66,11 @@ export default function PageEditor({ slug }: PageEditorProps) {
   return (
     <div className="w-full mt-5 mb-20">
       <hr className="w-full bg-white" />
-      {pageContent !== null &&
+      {initialValues !== null &&
         !submitting &&
         slug.split("\\")[0] !== "news" &&
         slug !== "home" && (
-          <Formik initialValues={pageContent} onSubmit={handleSubmit}>
+          <Formik initialValues={initialValues} onSubmit={handleSubmit}>
             <Form className="text-black flex flex-col space-y-2 items-start">
               <label htmlFor="title" className={styles.label}>
                 Title
@@ -71,8 +83,6 @@ export default function PageEditor({ slug }: PageEditorProps) {
               <ErrorMessage name="title" />
 
               <HeroInput name="heroURL" setFile={setFile} />
-
-              <FileInput name="files" setFiles={setAttachedFiles} />
 
               <label htmlFor="content" className={styles.label}>
                 Content
@@ -102,51 +112,8 @@ export default function PageEditor({ slug }: PageEditorProps) {
             </Form>
           </Formik>
         )}
+      {slug === "home" && <HomeEditor />}
     </div>
-  );
-}
-
-function FileInput(props: any) {
-  const {
-    values: { files },
-  } = useFormikContext();
-  const fieldProps = useField(props.name);
-  const FieldHelperProps = fieldProps[2];
-  const inputRef = React.useRef<HTMLInputElement>(null);
-
-  return (
-    <>
-      <label className={styles.label} htmlFor={props.name}>
-        Attached Files
-      </label>
-      <p className={styles.helper}>
-        You can upload any kind of file here. They will be attached at the
-        bottom of the page. Be careful before clicking the remove files button,
-        as this will remove all files uploaded to the page. You can use CMD +
-        click on Mac or ALT + click (I think) on Windows to select multiple
-        files.
-      </p>
-      <div className="flex text-white items-center">
-        <input
-          type="file"
-          id={props.name}
-          ref={inputRef}
-          multiple
-          onChange={() => FieldHelperProps.setValue(inputRef.current?.files)}
-        />
-        <p className="-ml-5">
-          Current files selected:{" "}
-          <b>{files ? `${files.length} files` : "NO FILES"}</b>
-        </p>
-        <button
-          className="bg-red-400 rounded-md px-4 py-2 ml-5 hover:bg-red-600 transition duration-300"
-          type="button"
-          onClick={() => FieldHelperProps.setValue(null)}
-        >
-          Remove All Files
-        </button>
-      </div>
-    </>
   );
 }
 
@@ -159,8 +126,8 @@ function HeroInput(props: any) {
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
-    if (inputRef.current) {
-      props.setFile(inputRef.current.files);
+    if (inputRef.current && inputRef.current.files?.length === 1) {
+      props.setFile(inputRef.current.files[0]);
     }
   }, [inputRef.current?.files]);
 

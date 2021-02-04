@@ -65,20 +65,20 @@ export default function Nav() {
                 />
               </NavLink>
 
-              <NavLink slug="members" hoverProps={membersPrimary}>
-                <NavTooltip
-                  hoverProps={membersSecondary}
-                  hover={membersHover}
-                  prefix="members/"
-                  pages={getPages(sections[1])}
-                />
-              </NavLink>
-
               <NavLink slug="conferences" hoverProps={confPrimary}>
                 <NavTooltip
                   hoverProps={confSecondary}
                   hover={confHover}
                   prefix="conferences/"
+                  pages={getPages(sections[1])}
+                />
+              </NavLink>
+
+              <NavLink slug="members" hoverProps={membersPrimary}>
+                <NavTooltip
+                  hoverProps={membersSecondary}
+                  hover={membersHover}
+                  prefix="members/"
                   pages={getPages(sections[2])}
                 />
               </NavLink>

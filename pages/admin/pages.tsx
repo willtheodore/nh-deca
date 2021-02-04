@@ -18,6 +18,7 @@ interface PageValues {
 
 export default function Pages() {
   const [editSlug, setEditSlug] = React.useState<string | null>(null);
+  const [options, setOptions] = React.useState<Page[] | null>(null);
 
   const initialValues: PageValues = {
     section: "home",
@@ -28,8 +29,16 @@ export default function Pages() {
     values: PageValues,
     actions: FormikHelpers<PageValues>
   ) => {
-    const slug = values.section.concat("\\".concat(values.page));
-    setEditSlug(slug);
+    setEditSlug(null);
+    if (values.page !== "") {
+      const slug = values.section.concat("\\".concat(values.page));
+      setEditSlug(slug);
+    } else if (values.section !== "home" && options && options[0].slug) {
+      const slug = values.section.concat("\\".concat(options[0].slug));
+      setEditSlug(slug);
+    } else if (values.section === "home") {
+      setEditSlug("home");
+    }
   };
 
   return (
@@ -65,6 +74,8 @@ export default function Pages() {
             <PageSelectField
               name="page"
               className="rounded-md w-52 ml-5 border-none"
+              options={options}
+              setOptions={setOptions}
             />
             <button
               type="submit"
@@ -88,7 +99,6 @@ function PageSelectField(props: any) {
     touched,
   } = useFormikContext();
   const [field] = useField(props);
-  const [options, setOptions] = React.useState<Page[] | null>(null);
   const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
@@ -100,7 +110,7 @@ function PageSelectField(props: any) {
   const getOptions = async () => {
     const sectionArray = await getPagesBySection(section);
     if (sectionArray) {
-      setOptions(sectionArray);
+      props.setOptions(sectionArray);
     }
     setLoading(false);
   };
@@ -110,10 +120,10 @@ function PageSelectField(props: any) {
       <img className="animate-spin ml-2" src="/svg/cached.svg" alt="loading" />
     );
 
-  if (options !== null && section !== "home")
+  if (props.options !== null && section !== "home")
     return (
       <select {...field} {...props}>
-        {options.map((page) => (
+        {props.options.map((page: Page) => (
           <option key={page.slug} value={page.slug}>
             {page.label}
           </option>

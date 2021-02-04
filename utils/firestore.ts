@@ -15,7 +15,10 @@ export interface Page {
 export const getSections = async () => {
   try {
     const sections: Section[] = [];
-    const sectionsSnapshot = await db.collection("sections").get();
+    const sectionsQuery = db
+      .collection("sections")
+      .orderBy(firebase.firestore.FieldPath.documentId());
+    const sectionsSnapshot = await sectionsQuery.get();
     sectionsSnapshot.forEach((doc) => {
       const pages: Section = doc.data();
       sections.push(pages);
@@ -23,6 +26,92 @@ export const getSections = async () => {
     return sections;
   } catch (e) {
     console.log(e);
+  }
+};
+
+export const addPageToSection = async (
+  section: string,
+  page: string,
+  index: number
+) => {
+  try {
+    const pageLabel = page.trim();
+    const pageSlug = pageLabel.toLowerCase().replace(" ", "-");
+    await db
+      .collection("sections")
+      .doc(section)
+      .update({
+        [pageSlug]: {
+          label: pageLabel,
+          index: index,
+        },
+      });
+  } catch (e) {
+    console.log("Error adding page to section", e);
+  }
+};
+
+export const swapPages = async (
+  section: string,
+  pages: Section,
+  i1: number,
+  i2: number
+) => {
+  try {
+    if (Math.abs(i1 - i2) !== 1) throw Error("indexes are not adjacent");
+    const newPages: Section = {};
+    for (const page in pages) {
+      if (pages[page].index === i1) {
+        newPages[page] = {
+          label: pages[page].label,
+          index: i2,
+        };
+      } else if (pages[page].index === i2) {
+        newPages[page] = {
+          label: pages[page].label,
+          index: i1,
+        };
+      } else {
+        newPages[page] = pages[page];
+      }
+    }
+    await db.collection("sections").doc(section).set(newPages);
+  } catch (e) {
+    console.log("Error changing page order", e);
+  }
+};
+
+export const removePageAtIndex = async (
+  section: string,
+  pages: Section,
+  index: number
+) => {
+  try {
+    const newPages: Section = {};
+    let pageSlug = "";
+    for (const page in pages) {
+      const currentIndex = pages[page].index;
+      if (currentIndex !== index) {
+        if (currentIndex < index) {
+          newPages[page] = {
+            label: pages[page].label,
+            index: pages[page].index,
+          };
+        } else {
+          newPages[page] = {
+            label: pages[page].label,
+            index: pages[page].index - 1,
+          };
+        }
+      } else {
+        pageSlug = page;
+      }
+    }
+    await db.collection("sections").doc(section).set(newPages);
+    const slug = section.concat(`\\${pageSlug}`);
+    await db.collection("content").doc(slug).delete();
+  } catch (e) {
+    console.log("Error removing a page from the section", e);
   }
 };
 
@@ -44,12 +133,31 @@ export const getHomeContent = async () => {
   }
 };
 
+export const updateHomeContent = async (
+  bannerTitle: string,
+  bannerContent: string
+) => {
+  try {
+    await db
+      .collection("content")
+      .doc("home")
+      .set({
+        banner: {
+          title: bannerTitle,
+          content: bannerContent,
+        },
+      });
+  } catch (e) {
+    console.log("Error updating home content", e);
+  }
+};
+
 export interface PageContent {
   title: string;
   slug?: string;
   heroURL: string | null;
   content: string;
-  files?: FileList;
+  files?: string[];
 }
 
 export const getPage = async (slug: string) => {
@@ -72,10 +180,11 @@ export const getPagePaths = async () => {
       const section = sectionSnapshot.data();
       const prefix = sectionSnapshot.id;
       for (const slug in section) {
+        console.log(prefix, slug);
         paths.push([prefix, slug]);
       }
     });
-    console.log("Returning paths: ", paths);
+    console.log("Returning paths:", paths);
     return paths;
   } catch (e) {
     console.log("Error getting paths: ", e);
@@ -136,23 +245,13 @@ export const updatePageContent = async (
   title: string,
   slug: string,
   heroURL: string | null,
-  file: FileList | null,
-  files: FileList | null,
+  heroFile: File | null,
   content: string
 ) => {
   try {
-    if (heroURL && file && file.length === 1) {
-      if (file[0].name === heroURL) {
-        const pageImagesRef = storage.ref().child(`pageImages/${heroURL}`);
-        await pageImagesRef.put(file[0]);
-      }
-    }
-
-    if (files && files.length > 0) {
-      for (let i = 0; i < files.length; i++) {
-        const filesRef = storage.ref().child(`pageFiles/${files[i].name}`);
-        await filesRef.put(files[i]);
-      }
+    if (heroURL && heroFile && heroFile.name === heroURL) {
+      const pageImagesRef = storage.ref().child(`pageImages/${heroURL}`);
+      await pageImagesRef.put(heroFile);
     }
 
     await db
@@ -162,7 +261,6 @@ export const updatePageContent = async (
         title,
         heroURL: heroURL ? heroURL : null,
         content,
-        files: files ? files : null,
       });
     const slugSplit = slug.split("\\");
     const index = await getIndex(slugSplit);
