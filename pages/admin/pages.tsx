@@ -6,6 +6,7 @@ import {
   useField,
   useFormikContext,
 } from "formik";
+import Head from "next/head";
 import * as React from "react";
 import AdminLayout from "../../components/admin/adminLayout";
 import PageEditor from "../../components/admin/pageEditor";
@@ -42,54 +43,60 @@ export default function Pages() {
   };
 
   return (
-    <AdminLayout>
-      <div className="text-white pt-10">
-        <h1 className="uppercase font-bold text-3xl">Edit Pages</h1>
-        <h2 className="text-lg">
-          Pick a section. Then pick a page. Then edit in the window below to
-          change the content! Some pages (like the home page) will have special
-          fields (like the home banner) to edit specific content.
-          <div className="pb-2" />
-          Try not to refresh the page until you're done making changes. I
-          recommend opening another tab with the page you are editing and
-          refreshing that page after you make changes on this page. Use the
-          "commit changes" button to save what you've wrote once you're done!
-          <div className="pb-2" />
-          ALWAYS REFRESH AFTER YOU COMMIT CHANGES. This will help prevent bugs.
-        </h2>
+    <>
+      <Head>
+        <title>Admin - Manage the NH DECA Page Content</title>
+      </Head>
+      <AdminLayout>
+        <div className="text-white pt-10">
+          <h1 className="uppercase font-bold text-3xl">Edit Pages</h1>
+          <h2 className="text-lg">
+            Pick a section. Then pick a page. Then edit in the window below to
+            change the content! Some pages (like the home page) will have
+            special fields (like the home banner) to edit specific content.
+            <div className="pb-2" />
+            Try not to refresh the page until you're done making changes. I
+            recommend opening another tab with the page you are editing and
+            refreshing that page after you make changes on this page. Use the
+            "commit changes" button to save what you've wrote once you're done!
+            <div className="pb-2" />
+            ALWAYS REFRESH AFTER YOU COMMIT CHANGES. This will help prevent
+            bugs.
+          </h2>
 
-        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-          <Form className="text-black mt-5 flex items-center">
-            <Field
-              as="select"
-              name="section"
-              className="rounded-md w-52 border-none"
-            >
-              <option value="about">About</option>
-              <option value="members">Members</option>
-              <option value="conferences">Conferences</option>
-              <option value="news">News</option>
-              <option value="home">Home</option>
-            </Field>
-            <PageSelectField
-              name="page"
-              className="rounded-md w-52 ml-5 border-none"
-              options={options}
-              setOptions={setOptions}
-            />
-            <button
-              type="submit"
-              className="px-6 py-2 ml-5 rounded-md font-bold uppercase tracking-wider bg-decaBlue hover:bg-blue-500 
+          <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+            <Form className="text-black mt-5 flex items-center">
+              <Field
+                as="select"
+                name="section"
+                className="rounded-md w-52 border-none"
+              >
+                <option value="about">About</option>
+                <option value="members">Members</option>
+                <option value="conferences">Conferences</option>
+                <option value="news">News</option>
+                <option value="home">Home</option>
+              </Field>
+              <PageSelectField
+                name="page"
+                className="rounded-md w-52 ml-5 border-none"
+                options={options}
+                setOptions={setOptions}
+              />
+              <button
+                type="submit"
+                className="px-6 py-2 ml-5 rounded-md font-bold uppercase tracking-wider bg-decaBlue hover:bg-blue-500 
                          transition duration-300 text-white"
-            >
-              Submit
-            </button>
-          </Form>
-        </Formik>
+              >
+                Submit
+              </button>
+            </Form>
+          </Formik>
 
-        {editSlug && <PageEditor slug={editSlug} />}
-      </div>
-    </AdminLayout>
+          {editSlug && <PageEditor slug={editSlug} />}
+        </div>
+      </AdminLayout>
+    </>
   );
 }
 

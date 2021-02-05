@@ -13,9 +13,10 @@ export default function AdminNav() {
       <AdminNavLink white slug="/" label="< Website home" />
 
       <div className="flex items-center space-x-2">
-        <AdminNavLink slug="/admin/photos" label="photos" />
+        <AdminNavLink slug="/admin/news" label="News" />
         <AdminNavLink slug="/admin/sections" label="sections" />
         <AdminNavLink slug="/admin/pages" label="pages" />
+        <AdminNavLink slug="/admin/photos" label="photos" />
         <AdminNavLink slug="/admin/adminCode" label="admin Code" />
         <button
           className="px-6 py-2 mt-2 bg-gray-100 rounded-md text-decaBlue inline uppercase  tracking-wider hover:bg-blue-100 transition duration-300"

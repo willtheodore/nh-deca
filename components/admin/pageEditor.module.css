@@ -7,7 +7,7 @@
 }
 
 .textarea {
-  @apply h-80 p-5 rounded-md w-full;
+  @apply h-80 p-5 rounded-md w-full font-mono;
 }
 
 .helper {
