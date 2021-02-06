@@ -56,7 +56,11 @@ export default function Nav() {
         ) : (
           sections && (
             <div className="flex items-center space-x-5 text-white tracking-widest uppercase font-light">
-              <NavLink slug="about" hoverProps={aboutPrimary}>
+              <NavLink
+                slug="about/mission"
+                text="About"
+                hoverProps={aboutPrimary}
+              >
                 <NavTooltip
                   hoverProps={aboutSecondary}
                   hover={aboutHover}
@@ -65,7 +69,11 @@ export default function Nav() {
                 />
               </NavLink>
 
-              <NavLink slug="conferences" hoverProps={confPrimary}>
+              <NavLink
+                slug="conferences/state-cdc"
+                text="Conferences"
+                hoverProps={confPrimary}
+              >
                 <NavTooltip
                   hoverProps={confSecondary}
                   hover={confHover}
@@ -74,7 +82,11 @@ export default function Nav() {
                 />
               </NavLink>
 
-              <NavLink slug="members" hoverProps={membersPrimary}>
+              <NavLink
+                slug="members/join-nh-deca"
+                text="Members"
+                hoverProps={membersPrimary}
+              >
                 <NavTooltip
                   hoverProps={membersSecondary}
                   hover={membersHover}
@@ -83,7 +95,11 @@ export default function Nav() {
                 />
               </NavLink>
 
-              <NavLink slug="news" hoverProps={newsPrimary}>
+              <NavLink
+                slug="news/news-feed"
+                text="News"
+                hoverProps={newsPrimary}
+              >
                 <NavTooltip
                   hoverProps={newsSecondary}
                   hover={newsHover}

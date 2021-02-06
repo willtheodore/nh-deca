@@ -34,7 +34,7 @@ export default function FeedStory({ story, key }: FeedStoryProps) {
       <hr className="h-1 w-8 bg-black my-4" />
       <div
         className={cn({
-          "prose pros-sm max-w-none": true,
+          "prose pros-sm max-w-none w-full": true,
           "max-h-80 overflow-hidden": !expanded,
         })}
         dangerouslySetInnerHTML={{ __html: marked(story.content) }}

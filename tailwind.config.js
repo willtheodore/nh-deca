@@ -46,6 +46,22 @@ module.exports = {
         "4xl": "2rem",
       },
       typography: (theme) => ({
+        sm: {
+          css: {
+            blockquote: {
+              fontStyle: "normal",
+              quotes: "none",
+              padding: "0.1rem 0 0.1rem 1em",
+              borderRadius: "0 0.5rem 0.5rem 0",
+              borderLeftWidth: "10px",
+              backgroundColor: theme("colors.blue.200"),
+              borderLeftColor: theme("colors.blue.400"),
+            },
+            ul: {
+              listStyle: "disc",
+            },
+          },
+        },
         DEFAULT: {
           css: {
             blockquote: {

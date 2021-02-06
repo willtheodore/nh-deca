@@ -5,22 +5,32 @@ import ClearButton from "../components/clearButton";
 import Layout from "../components/layout";
 import StoryPreview from "../components/storyPreview";
 import { BannerSchema, getHomeContent, HomeContent } from "../utils/firestore";
+import { fetchArticles, NewsArticle } from "../utils/news";
 
 interface HomeProps {
   homeContent: HomeContent;
+  stories: NewsArticle[];
 }
 
 export async function getStaticProps(context: GetStaticPropsContext) {
   const homeContent = await getHomeContent();
+  const res = await fetchArticles(3);
+  const stories = [];
+  if (res) {
+    for (const story of res) {
+      stories.push(story.returnData());
+    }
+  }
 
   return {
     props: {
       homeContent,
+      stories,
     },
   };
 }
 
-export default function Home({ homeContent }: HomeProps) {
+export default function Home({ homeContent, stories }: HomeProps) {
   return (
     <>
       <Head>
@@ -36,9 +46,15 @@ export default function Home({ homeContent }: HomeProps) {
                 Recent Stories:
               </h1>
               <div className="flex flex-col tablet:flex-row space-y-5 tablet:space-x-5 tablet:space-y-0">
-                <StoryPreview />
-                <StoryPreview />
-                <StoryPreview />
+                {stories.length > 0 &&
+                  stories.map((story) => (
+                    <div
+                      key={story.title}
+                      className="flex-1 rounded-lg bg-gray-50 p-5 shadow-xl"
+                    >
+                      <StoryPreview story={story} />
+                    </div>
+                  ))}
               </div>
             </div>
             <PhotoAlbumPreview

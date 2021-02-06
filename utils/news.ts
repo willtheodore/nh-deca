@@ -7,6 +7,7 @@ interface NewsArticleInit {
   content: string;
   tags: string[];
   author?: string;
+  id?: string;
   timestamp?: Date;
 }
 
@@ -14,13 +15,22 @@ export class NewsArticle {
   title: string;
   content: string;
   author: string | null;
+  id: string | null;
   timestamp: Date;
   tags: string[];
 
-  constructor({ title, content, tags, author, timestamp }: NewsArticleInit) {
+  constructor({
+    title,
+    content,
+    tags,
+    author,
+    timestamp,
+    id,
+  }: NewsArticleInit) {
     this.title = title;
     this.content = content;
     this.author = author ? author : null;
+    this.id = id ? id : null;
     this.tags = tags;
     this.timestamp = timestamp ? timestamp : new Date(Date.now());
   }
@@ -31,6 +41,16 @@ export class NewsArticle {
     }" written on ${this.timestamp.toDateString()} by ${
       this.author ? this.author : "null"
     }.`;
+  }
+
+  returnData() {
+    return {
+      title: this.title,
+      author: this.author,
+      tags: this.tags,
+      content: this.content,
+      timestamp: this.timestamp.getTime(),
+    };
   }
 
   addTag(tag: string) {
@@ -62,6 +82,7 @@ const newsConverter = {
     title: article.title,
     author: article.author,
     tags: article.tags,
+    id: article.id,
     timestamp: firebase.firestore.Timestamp.fromDate(article.timestamp),
     content: article.content,
   }),
@@ -72,6 +93,7 @@ const newsConverter = {
     const data = snapshot.data(options);
     if (data) {
       return new NewsArticle({
+        id: snapshot.id,
         title: data.title,
         author: data.author,
         tags: data.tags,
@@ -129,6 +151,51 @@ export async function createArticle(article: NewsArticle) {
     return "Success";
   } catch (e) {
     console.log("Error creating a news article", e);
+    return "Error";
+  }
+}
+
+type SearchResults = "Error" | NewsArticle[];
+export async function searchArticles(query: string): Promise<SearchResults> {
+  try {
+    const res = await db
+      .collection("articles")
+      .where("title", "==", query)
+      .withConverter(newsConverter)
+      .get();
+
+    const article: NewsArticle[] = [];
+    res.forEach((snap) => {
+      article.push(snap.data());
+    });
+
+    return article;
+  } catch (e) {
+    console.log("Error searching for articles", e);
+    return "Error";
+  }
+}
+
+export async function deleteArticle(id: string) {
+  try {
+    await db.collection("articles").doc(id).delete();
+    return "Success";
+  } catch (e) {
+    console.log("Error deleting article", e);
+    return "Error";
+  }
+}
+
+export async function editArticle(article: NewsArticle) {
+  try {
+    await db
+      .collection("articles")
+      .doc(article.id!)
+      .withConverter(newsConverter)
+      .set(article);
+    return "Success";
+  } catch (e) {
+    console.log("Error saving changes to article", e);
     return "Error";
   }
 }
