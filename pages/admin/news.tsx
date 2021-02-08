@@ -81,7 +81,7 @@ export default function News() {
               className="text-green-400 text-4xl uppercase my-10 font-bold cursor-pointer mx-auto"
               onClick={() => setMode(Mode.default)}
             >
-              Success! Click me to go back to the home new editing page.
+              Success! Click me to go back to the news admin page.
             </p>
           )}
 

@@ -2,6 +2,7 @@ import { AppProps } from "next/dist/next-server/lib/router/router";
 import Head from "next/head";
 import * as React from "react";
 import "../styles/globals.css";
+import "../styles/modalStyles.css";
 import { AuthProvider, initializeAuthState, User } from "../utils/auth";
 
 function MyApp({ Component, pageProps }: AppProps) {

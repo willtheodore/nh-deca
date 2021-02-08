@@ -22,7 +22,7 @@ export default function FeedStory({ story, key }: FeedStoryProps) {
           {story.tags.length > 0 &&
             story.tags.map((tag, index) => (
               <p
-                className="px-4 py-2 bg-blue-800 text-white uppercase rounded-md flex-wrap"
+                className="px-3 py-1 bg-blue-800 text-white uppercase rounded-md flex-wrap text-xs"
                 key={tag.length * (index + 1)}
               >
                 {tag}
@@ -34,7 +34,7 @@ export default function FeedStory({ story, key }: FeedStoryProps) {
       <hr className="h-1 w-8 bg-black my-4" />
       <div
         className={cn({
-          "prose pros-sm max-w-none w-full": true,
+          "prose prose-green max-w-none w-full": true,
           "max-h-80 overflow-hidden": !expanded,
         })}
         dangerouslySetInnerHTML={{ __html: marked(story.content) }}
@@ -42,7 +42,7 @@ export default function FeedStory({ story, key }: FeedStoryProps) {
 
       <div className="grid place-items-center w-full">
         <button
-          className="bg-decaBlue hover:bg-blue-500 uppercase px-4 py-2 text-white transition-colors duration-300 rounded-md mt-5"
+          className=" hover:bg-blue-100 uppercase px-3 py-1 text-decaBlue transition-colors duration-300 rounded-md"
           onClick={() => setExpanded(!expanded)}
         >
           {expanded ? "COLLAPSE" : "EXPAND"}

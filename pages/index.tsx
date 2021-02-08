@@ -1,5 +1,6 @@
 import { GetStaticPropsContext } from "next";
 import Head from "next/head";
+import Link from "next/link";
 import React from "react";
 import ClearButton from "../components/clearButton";
 import Layout from "../components/layout";
@@ -48,12 +49,14 @@ export default function Home({ homeContent, stories }: HomeProps) {
               <div className="flex flex-col tablet:flex-row space-y-5 tablet:space-x-5 tablet:space-y-0">
                 {stories.length > 0 &&
                   stories.map((story) => (
-                    <div
-                      key={story.title}
-                      className="flex-1 rounded-lg bg-gray-50 p-5 shadow-xl"
-                    >
-                      <StoryPreview story={story} />
-                    </div>
+                    <Link href="/news/news-feed">
+                      <div
+                        key={story.title}
+                        className="flex-1 rounded-lg bg-gray-50 p-5 shadow-xl border-opacity-0 border-decaBlue border-4 hover:border-opacity-100 cursor-pointer transition duration-500"
+                      >
+                        <StoryPreview story={story} />
+                      </div>
+                    </Link>
                   ))}
               </div>
             </div>

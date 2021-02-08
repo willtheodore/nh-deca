@@ -145,6 +145,44 @@ export async function fetchArticlesAfter(date: Date, limit: number) {
   }
 }
 
+export async function fetchArticlesBetween(sDate: Date, eDate: Date) {
+  try {
+    const articles = await db
+      .collection("articles")
+      .where("timestamp", ">=", firebase.firestore.Timestamp.fromDate(sDate))
+      .where("timestamp", "<=", firebase.firestore.Timestamp.fromDate(eDate))
+      .orderBy("timestamp", "asc")
+      .withConverter(newsConverter)
+      .get();
+
+    const arr: NewsArticle[] = [];
+    articles.forEach((articleSnapshot) => {
+      arr.push(articleSnapshot.data());
+    });
+    return arr;
+  } catch (e) {
+    console.log("Error fetching filtered stories", e);
+  }
+}
+
+export async function fetchArticlesWithTags(tags: string[]) {
+  try {
+    const articles = await db
+      .collection("articles")
+      .where("tags", "array-contains-any", tags)
+      .withConverter(newsConverter)
+      .get();
+
+    const arr: NewsArticle[] = [];
+    articles.forEach((articleSnapshot) => {
+      arr.push(articleSnapshot.data());
+    });
+    return arr;
+  } catch (e) {
+    console.log("Error fetching filtered stories", e);
+  }
+}
+
 export async function createArticle(article: NewsArticle) {
   try {
     await db.collection("articles").withConverter(newsConverter).add(article);

@@ -63,7 +63,7 @@ export default function CreateArticle({
 
   const addTag = (name: string) => {
     const newTags = tags.slice();
-    newTags.push(name);
+    newTags.push(name.toLowerCase());
     setTags(newTags);
     console.log(tags);
   };
