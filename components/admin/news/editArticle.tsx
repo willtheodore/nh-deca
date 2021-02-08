@@ -1,12 +1,12 @@
 import * as React from "react";
 import { editArticle, NewsArticle } from "../../../utils/news";
-import { Mode } from "./createArticle";
+import { NewsMode } from "./createArticle";
 import styles from "./createArticle.module.css";
 
 interface EditArticleProps {
   article: NewsArticle | null;
   setError: React.Dispatch<React.SetStateAction<string | null>>;
-  setMode: React.Dispatch<React.SetStateAction<Mode>>;
+  setMode: React.Dispatch<React.SetStateAction<NewsMode>>;
 }
 
 export default function EditArticle({
@@ -50,7 +50,7 @@ export default function EditArticle({
         setError(
           "We ran into an error saving the changes to the article. Please try again."
         );
-      else setMode(Mode.success);
+      else setMode(NewsMode.success);
     };
 
     const removeTag = (index: number) => {

@@ -54,6 +54,22 @@ html {
   max-width: 120ch !important;
 }
 
+.blue-pill {
+  @apply bg-decaBlue px-4 py-2 rounded-full text-white hover:bg-blue-700 transition duration-300;
+}
+
+.white-pill {
+  @apply bg-white px-4 py-2 rounded-full text-decaBlue hover:bg-blue-100 transition duration-300;
+}
+
+.blue-rounded {
+  @apply bg-decaBlue px-4 py-2 rounded-md text-white hover:bg-blue-700 transition duration-300;
+}
+
+.white-rounded {
+  @apply bg-white px-4 py-2 rounded-md text-decaBlue hover:bg-blue-100 transition duration-300;
+}
+
 .remove-margin {
   margin: 0 !important;
 }

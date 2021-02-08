@@ -4,10 +4,10 @@ import styles from "./createArticle.module.css";
 
 interface CreateArticleProps {
   setError: React.Dispatch<React.SetStateAction<string | null>>;
-  setMode: React.Dispatch<React.SetStateAction<Mode>>;
+  setMode: React.Dispatch<React.SetStateAction<NewsMode>>;
 }
 
-export enum Mode {
+export enum NewsMode {
   default,
   success,
   add,
@@ -50,7 +50,7 @@ export default function CreateArticle({
       setError(
         "We ran into an error creating the article. Please try again later."
       );
-    else setMode(Mode.success);
+    else setMode(NewsMode.success);
   };
 
   const removeTag = (index: number) => {

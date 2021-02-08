@@ -1,14 +1,16 @@
 import Head from "next/head";
 import * as React from "react";
 import AdminLayout from "../../components/admin/adminLayout";
-import CreateArticle, { Mode } from "../../components/admin/news/createArticle";
+import CreateArticle, {
+  NewsMode,
+} from "../../components/admin/news/createArticle";
 import EditArticle from "../../components/admin/news/editArticle";
 import SearchResults from "../../components/admin/news/serarchResults";
 import ErrorMessage from "../../components/error";
 import { NewsArticle, searchArticles } from "../../utils/news";
 
 export default function News() {
-  const [mode, setMode] = React.useState<Mode>(Mode.default);
+  const [mode, setMode] = React.useState<NewsMode>(NewsMode.default);
   const [results, setResults] = React.useState<NewsArticle[] | null>(null);
   const [edit, setEdit] = React.useState<NewsArticle | null>(null);
   const [error, setError] = React.useState<null | string>(null);
@@ -26,7 +28,7 @@ export default function News() {
         );
       else {
         setResults(res);
-        setMode(Mode.search);
+        setMode(NewsMode.search);
       }
     }
   };
@@ -64,28 +66,28 @@ export default function News() {
             delete an old article, enter its title and hit "search".
           </p>
 
-          {mode === Mode.default && (
+          {mode === NewsMode.default && (
             <>
               <NewsSearch handleSearch={handleSearch} />
               <button
                 className="bg-decaBlue rounded-full text-white px-4 py-2 mt-5 hover:bg-blue-500 transition-colors duration-300"
-                onClick={() => setMode(Mode.add)}
+                onClick={() => setMode(NewsMode.add)}
               >
                 Create New Article
               </button>
             </>
           )}
 
-          {mode === Mode.success && (
+          {mode === NewsMode.success && (
             <p
               className="text-green-400 text-4xl uppercase my-10 font-bold cursor-pointer mx-auto"
-              onClick={() => setMode(Mode.default)}
+              onClick={() => setMode(NewsMode.default)}
             >
               Success! Click me to go back to the news admin page.
             </p>
           )}
 
-          {mode === Mode.search && (
+          {mode === NewsMode.search && (
             <SearchResults
               results={results}
               setEdit={setEdit}
@@ -94,11 +96,11 @@ export default function News() {
             />
           )}
 
-          {mode === Mode.add && (
+          {mode === NewsMode.add && (
             <CreateArticle setError={setError} setMode={setMode} />
           )}
 
-          {mode === Mode.edit && (
+          {mode === NewsMode.edit && (
             <EditArticle article={edit} setError={setError} setMode={setMode} />
           )}
         </>

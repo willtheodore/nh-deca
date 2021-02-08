@@ -1,10 +1,10 @@
 import * as React from "react";
 import { deleteArticle, NewsArticle } from "../../../utils/news";
-import { Mode } from "./createArticle";
+import { NewsMode } from "./createArticle";
 
 interface SearchResultsProps {
   results: NewsArticle[] | null;
-  setMode: React.Dispatch<React.SetStateAction<Mode>>;
+  setMode: React.Dispatch<React.SetStateAction<NewsMode>>;
   setError: React.Dispatch<React.SetStateAction<string | null>>;
   setEdit: React.Dispatch<React.SetStateAction<NewsArticle | null>>;
 }
@@ -18,7 +18,7 @@ export default function SearchResults({
   const handleEdit = async (article: NewsArticle) => {
     if (article.id) {
       setEdit(article);
-      setMode(Mode.edit);
+      setMode(NewsMode.edit);
     } else {
       setError("We ran into an error editing that article. Please try again.");
     }
@@ -32,7 +32,7 @@ export default function SearchResults({
           "We ran into an error deleting that article. Please try again."
         );
       else {
-        setMode(Mode.success);
+        setMode(NewsMode.success);
       }
     } else {
       setError("We ran into an error deleting that article. Please try again.");
@@ -68,7 +68,7 @@ export default function SearchResults({
         ))}
       <button
         className="bg-decaBlue px-4 py-2 uppercase hover:bg-blue-500 transition-colors duration-300 rounded-md text-white tracking-wider mt-10"
-        onClick={() => setMode(Mode.default)}
+        onClick={() => setMode(NewsMode.default)}
       >
         BACK
       </button>
