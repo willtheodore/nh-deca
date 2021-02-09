@@ -86,27 +86,37 @@ export async function getEventsInMonth(year: number, month: number) {
   try {
     const sDate = new Date(year, month);
     const eDate = new Date(year, month + 1);
-    const events = await db
-      .collection("events")
-      .where("startDate", ">=", firebase.firestore.Timestamp.fromDate(sDate))
-      .where("startDate", "<=", firebase.firestore.Timestamp.fromDate(eDate))
-      .withConverter(calendarConverter)
-      .get();
+    const startingEvents = convertToArray(
+      await db
+        .collection("events")
+        .where("startDate", ">=", firebase.firestore.Timestamp.fromDate(sDate))
+        .where("startDate", "<=", firebase.firestore.Timestamp.fromDate(eDate))
+        .withConverter(calendarConverter)
+        .get()
+    );
+    const endingEvents = convertToArray(
+      await db
+        .collection("events")
+        .where("endDate", ">=", firebase.firestore.Timestamp.fromDate(sDate))
+        .where("endDate", "<=", firebase.firestore.Timestamp.fromDate(eDate))
+        .withConverter(calendarConverter)
+        .get()
+    );
+    const events = merge(startingEvents, endingEvents);
 
     const res: EventResult = {};
-    events.forEach((event) => {
-      const eventData = event.data();
-      const startDay = eventData.startDate.getDate();
+    for (const event of events) {
+      const startDay = event.startDate.getDate();
       if (res[startDay] === undefined) {
         const arr = [];
-        arr.push(eventData);
+        arr.push(event);
         res[startDay] = arr;
       } else {
         const arr = res[startDay];
-        arr.push(eventData);
+        arr.push(event);
         res[startDay] = arr;
       }
-    });
+    }
     return res;
   } catch (e) {
     console.log("Error getting events within month", e);
@@ -139,4 +149,27 @@ export async function updateEvent(event: CalendarEvent) {
     console.log("Error updating the event", e);
     return "Error";
   }
+}
+
+function convertToArray(
+  events: firebase.firestore.QuerySnapshot<CalendarEvent>
+) {
+  const arr: CalendarEvent[] = [];
+  events.forEach((event) => arr.push(event.data()));
+  return arr;
+}
+
+function merge(a1: CalendarEvent[], a2: CalendarEvent[]) {
+  const res = a1.slice();
+  for (const event of a2) {
+    if (!containsID(a1, event.id!)) res.push(event);
+  }
+  return res;
+}
+
+function containsID(arr: CalendarEvent[], id: string) {
+  for (const event of arr) {
+    if (event.id === id) return true;
+  }
+  return false;
 }

@@ -15,7 +15,7 @@
 }
 
 .dateLabel {
-  @apply pl-1;
+  @apply pl-1 text-center tablet:text-left w-full;
 }
 
 .squareWrapper {

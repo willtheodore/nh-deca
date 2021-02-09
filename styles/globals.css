@@ -74,6 +74,14 @@ html {
   margin: 0 !important;
 }
 
+.event-display > * {
+  color: white !important;
+}
+
+.event-display > * > a {
+  color: white !important;
+}
+
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;

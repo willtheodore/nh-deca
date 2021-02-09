@@ -4,20 +4,26 @@ import { CalendarEvent, getEventsInMonth } from "../../utils/calendar";
 import styles from "./calendarDisplay.module.css";
 import EditEvent from "./editEvent";
 import DisplayEvent from "./displayEvent";
+import ContinuedEvent from "./continuedEvent";
+import useBreakpoint from "../../hooks/useBreakpoint";
 
 interface CalendarSquare {
   day: number | null;
   events: CalendarEvent[] | null;
+  continuedEvents: CalendarEvent[] | null;
 }
 
 interface CalendarDisplayProps {
   edit: boolean;
+  setDisplay?: React.Dispatch<React.SetStateAction<CalendarEvent | null>>;
   dispatch?: React.Dispatch<CalendarDispatch>;
 }
 export default function CalendarDisplay({
   edit,
   dispatch,
+  setDisplay,
 }: CalendarDisplayProps) {
+  const breakpoint = useBreakpoint();
   const initialToday = new Date(Date.now());
   const [month, setMonth] = React.useState(initialToday.getMonth());
   const [squares, setSquares] = React.useState<CalendarSquare[] | null>(null);
@@ -47,29 +53,78 @@ export default function CalendarDisplay({
 
   const getSquares = async () => {
     const arr: CalendarSquare[] = [];
+    let activeEvents: CalendarEvent[] = [];
+    const hangingEvents: CalendarEvent[] = [];
     const days = getDays(month, year);
     const firstDay = toMondayStart(new Date(year, month).getDay());
+
+    const getSquareForDay = (
+      day: number,
+      eventsOnDay: CalendarEvent[] | undefined
+    ): CalendarSquare => {
+      const events = [];
+      const continuedEvents = [];
+
+      // Add active Events
+      for (const event of activeEvents) {
+        continuedEvents.push(event);
+        if (event.endDate.getDate() === day) {
+          const index = activeEvents.indexOf(event);
+          const newActive = [];
+          for (let i = 0; i < activeEvents.length; i++) {
+            if (i !== index) newActive.push(activeEvents[i]);
+          }
+          activeEvents = newActive;
+        }
+      }
+
+      if (eventsOnDay) {
+        for (const event of eventsOnDay) {
+          if (
+            event.startDate.getDate() === day &&
+            event.startDate.getMonth() === month
+          ) {
+            // Event starts on this day
+            if (!event.multiDay) {
+              events.push(event);
+            } else {
+              activeEvents.push(event);
+              events.push(event);
+            }
+          } else {
+            hangingEvents.push(event);
+          }
+        }
+      }
+
+      return {
+        day: day,
+        events: events.length > 0 ? events : null,
+        continuedEvents: continuedEvents.length > 0 ? continuedEvents : null,
+      };
+    };
 
     for (let i = 0; i < firstDay; i++) {
       arr.push({
         day: null,
         events: null,
+        continuedEvents: null,
       });
     }
 
     const eventsInMonth = await getEventsInMonth(year, month);
     if (eventsInMonth) {
       for (let i = 1; i <= days; i++) {
-        if (eventsInMonth[i] === undefined)
-          arr.push({
-            day: i,
-            events: null,
-          });
-        else
-          arr.push({
-            day: i,
-            events: eventsInMonth[i],
-          });
+        arr.push(getSquareForDay(i, eventsInMonth[i]));
+      }
+      for (const event of hangingEvents) {
+        const eDay = event.endDate.getDate();
+        for (let i = 0; i < eDay; i++) {
+          const currentSquare = arr[i];
+          currentSquare.continuedEvents
+            ? currentSquare.continuedEvents.push(event)
+            : (currentSquare.continuedEvents = [event]);
+        }
       }
 
       const lastDay = toMondayStart(new Date(year, month, days).getDay());
@@ -77,9 +132,9 @@ export default function CalendarDisplay({
         arr.push({
           day: null,
           events: null,
+          continuedEvents: null,
         });
       }
-
       setSquares(arr);
     }
   };
@@ -88,13 +143,13 @@ export default function CalendarDisplay({
     <>
       <div className="flex w-full space-x-2 items-center justify-center">
         <button className={styles.monthSwitch} onClick={decrementMonth}>
-          {"<"}
+          <img src="/svg/arrowLeft.svg" />
         </button>
         <p className={styles.dateHeader}>{`${getMonthString(
           month
         )} ${year}`}</p>
         <button className={styles.monthSwitch} onClick={incrementMonth}>
-          {">"}
+          <img src="/svg/arrowRight.svg" />
         </button>
       </div>
 
@@ -104,15 +159,7 @@ export default function CalendarDisplay({
           gridTemplateRows: `auto repeat("1fr", ${getWeeks(month, year)})`,
         }}
       >
-        {[
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday",
-          "Sunday",
-        ].map((day, index) => (
+        {getDayArray(breakpoint).map((day, index) => (
           <p
             key={index}
             className={styles.dayLabel}
@@ -128,24 +175,48 @@ export default function CalendarDisplay({
           squares.map((square, sIndex) => (
             <div className={styles.squareWrapper} key={sIndex}>
               {square.day && <p className={styles.dateLabel}>{square.day}</p>}
-              {square.events && (
-                <ul className="w-full space-y-1">
-                  {square.events.map((event, index) => (
-                    <li key={index} className="w-full">
+              <ul className="w-full space-y-1">
+                {square.continuedEvents?.map((event, index) => (
+                  <li key={index} className="w-full overflow-hidden">
+                    <ContinuedEvent
+                      event={event}
+                      edit={edit}
+                      setDisplay={setDisplay}
+                    />
+                  </li>
+                ))}
+                {square.events &&
+                  square.events.map((event, index) => (
+                    <li key={index} className="w-full overflow-hidden">
                       {edit && dispatch ? (
                         <EditEvent event={event} dispatch={dispatch} />
                       ) : (
-                        <DisplayEvent event={event} />
+                        setDisplay && (
+                          <DisplayEvent event={event} setDisplay={setDisplay} />
+                        )
                       )}
                     </li>
                   ))}
-                </ul>
-              )}
+              </ul>
             </div>
           ))}
       </div>
     </>
   );
+}
+
+function getDayArray(breakpoint: "phone" | "tablet" | "desktop" | undefined) {
+  if (breakpoint !== "phone")
+    return [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ];
+  else return ["M", "T", "W", "T", "F", "S", "S"];
 }
 
 function getMonthString(month: number) {

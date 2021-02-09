@@ -137,7 +137,7 @@ export default function EditEventModal({
   );
 }
 
-function toDateObject(date: Date): DateObject {
+export function toDateObject(date: Date): DateObject {
   return {
     day: date.getDate(),
     month: date.getMonth() + 1,
