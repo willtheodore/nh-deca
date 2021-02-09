@@ -3,6 +3,7 @@ import * as React from "react";
 import AdminLayout from "../../components/admin/adminLayout";
 import CreateEvent from "../../components/admin/calendar/createEvent";
 import cn from "classnames";
+import EditCalendar from "../../components/admin/calendar/editCalendar";
 
 export enum CalendarMode {
   default,
@@ -111,6 +112,10 @@ export default function Calendar() {
 
           {state.mode === CalendarMode.create && (
             <CreateEvent dispatch={dispatch} />
+          )}
+
+          {state.mode === CalendarMode.edit && (
+            <EditCalendar dispatch={dispatch} />
           )}
         </>
       </AdminLayout>

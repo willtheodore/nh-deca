@@ -1,0 +1,26 @@
+.container {
+  @apply grid grid-cols-7 w-full bg-gray-200 rounded-sm;
+}
+
+.monthSwitch {
+  @apply text-white text-3xl font-bold;
+}
+
+.dateHeader {
+  @apply text-white text-3xl uppercase tracking-wide;
+}
+
+.dayLabel {
+  @apply bg-blue-800 text-white uppercase text-center border-2 border-white py-2 font-light tracking-wide;
+}
+
+.dateLabel {
+  @apply pl-1;
+}
+
+.squareWrapper {
+  @apply w-full flex flex-col items-start;
+
+  min-height: 10rem;
+  border: 1px solid rgba(30, 64, 175);
+}

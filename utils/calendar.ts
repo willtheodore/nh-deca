@@ -78,3 +78,37 @@ export async function createEvent(event: CalendarEvent) {
     return "Error";
   }
 }
+
+interface EventResult {
+  [key: number]: CalendarEvent[];
+}
+export async function getEventsInMonth(year: number, month: number) {
+  try {
+    const sDate = new Date(year, month);
+    const eDate = new Date(year, month + 1);
+    const events = await db
+      .collection("events")
+      .where("startDate", ">=", firebase.firestore.Timestamp.fromDate(sDate))
+      .where("startDate", "<=", firebase.firestore.Timestamp.fromDate(eDate))
+      .withConverter(calendarConverter)
+      .get();
+
+    const res: EventResult = {};
+    events.forEach((event) => {
+      const eventData = event.data();
+      const startDay = eventData.startDate.getDate();
+      if (res[startDay] === undefined) {
+        const arr = [];
+        arr.push(eventData);
+        res[startDay] = arr;
+      } else {
+        const arr = res[startDay];
+        arr.push(eventData);
+        res[startDay] = arr;
+      }
+    });
+    return res;
+  } catch (e) {
+    console.log("Error getting events within month", e);
+  }
+}
