@@ -1,0 +1,11 @@
+.form {
+  @apply flex flex-col space-y-5 my-5 items-start w-screen-1/2;
+}
+
+.error {
+  @apply text-xs text-red-500;
+}
+
+.info {
+  @apply text-gray-400;
+}

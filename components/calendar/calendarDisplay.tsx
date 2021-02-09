@@ -129,9 +129,9 @@ export default function CalendarDisplay({
             <div className={styles.squareWrapper} key={sIndex}>
               {square.day && <p className={styles.dateLabel}>{square.day}</p>}
               {square.events && (
-                <ul>
+                <ul className="w-full space-y-1">
                   {square.events.map((event, index) => (
-                    <li key={index}>
+                    <li key={index} className="w-full">
                       {edit && dispatch ? (
                         <EditEvent event={event} dispatch={dispatch} />
                       ) : (

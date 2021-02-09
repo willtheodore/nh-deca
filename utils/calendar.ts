@@ -112,3 +112,31 @@ export async function getEventsInMonth(year: number, month: number) {
     console.log("Error getting events within month", e);
   }
 }
+
+export async function deleteEvent(event: CalendarEvent) {
+  try {
+    if (event.id) {
+      await db.collection("events").doc(event.id).delete();
+      return "Success";
+    }
+    return "Error";
+  } catch (e) {
+    console.log("Error deleting the event", e);
+    return "Error";
+  }
+}
+
+export async function updateEvent(event: CalendarEvent) {
+  try {
+    if (!event.id) throw Error("No Event ID");
+    await db
+      .collection("events")
+      .doc(event.id)
+      .withConverter(calendarConverter)
+      .set(event);
+    return "Success";
+  } catch (e) {
+    console.log("Error updating the event", e);
+    return "Error";
+  }
+}

@@ -8,7 +8,7 @@ import {
 import styles from "./createEvent.module.css";
 import { CalendarEvent, createEvent } from "../../../utils/calendar";
 
-const dateShape = {
+export const dateShape = {
   day: Yup.number()
     .required("A day is required.")
     .max(31, "The max day number is 31.")
@@ -38,7 +38,7 @@ const schema = Yup.object().shape({
   endDate: Yup.object().shape(dateShape),
 });
 
-interface CalendarValues {
+export interface CalendarValues {
   title: string;
   description: string;
   startDate: {
@@ -180,7 +180,7 @@ export default function CreateEvent({ dispatch }: CreateEventProps) {
 interface Errors {
   [key: string]: any;
 }
-function getErrors(errors: Errors) {
+export function getErrors(errors: Errors) {
   const arr: any[] = [];
   for (const key in errors) {
     arr.push(errors[key]);
@@ -188,14 +188,20 @@ function getErrors(errors: Errors) {
   return arr;
 }
 
-interface DateObject {
+export interface DateObject {
   day: number;
   month: number;
   year: number;
   hour: number;
   minute: number;
 }
-function getDateFromObject({ day, month, year, hour, minute }: DateObject) {
+export function getDateFromObject({
+  day,
+  month,
+  year,
+  hour,
+  minute,
+}: DateObject) {
   const date = new Date(year, month - 1, day, hour, minute);
   return date;
 }
@@ -204,7 +210,7 @@ interface DateBundleprops {
   name: string;
   label: string;
 }
-function DateBundle({ name, label }: DateBundleprops) {
+export function DateBundle({ name, label }: DateBundleprops) {
   return (
     <div>
       <label className={styles.label}>{label}</label>
@@ -254,7 +260,7 @@ interface InputBundleProps {
   type: string;
   label: string;
 }
-function InputBundle({ name, type, label }: InputBundleProps) {
+export function InputBundle({ name, type, label }: InputBundleProps) {
   return (
     <div className="flex flex-col w-full">
       <label htmlFor={name} className={styles.label}>

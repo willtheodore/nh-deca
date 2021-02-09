@@ -1,5 +1,5 @@
 .container {
-  @apply grid grid-cols-7 w-full bg-gray-200 rounded-sm;
+  @apply grid grid-cols-7 w-full bg-gray-200 rounded-sm mb-36;
 }
 
 .monthSwitch {

@@ -4,50 +4,72 @@ import AdminLayout from "../../components/admin/adminLayout";
 import CreateEvent from "../../components/admin/calendar/createEvent";
 import cn from "classnames";
 import EditCalendar from "../../components/admin/calendar/editCalendar";
+import { CalendarEvent, deleteEvent } from "../../utils/calendar";
+import Modal from "react-responsive-modal";
+import EditEventModal from "../../components/admin/calendar/editEventModal";
 
 export enum CalendarMode {
   default,
   create,
   edit,
+  editEvent,
+  delete,
   success,
   error,
 }
-
 export enum CalendarAction {
   create,
+  edit,
+  editEvent,
+  delete,
   reset,
   success,
   error,
-  edit,
 }
 export interface CalendarDispatch {
   type: CalendarAction;
   mode?: string;
   message?: string;
+  event?: CalendarEvent;
 }
 
 interface CalendarState {
   mode: CalendarMode;
   message: string;
+  event: CalendarEvent | null;
 }
 const reducer: React.Reducer<CalendarState, CalendarDispatch> = (
   state: CalendarState,
   action: CalendarDispatch
 ) => {
   switch (action.type) {
-    case CalendarAction.edit:
-      return { ...state, mode: CalendarMode.edit };
     case CalendarAction.create:
       return { ...state, mode: CalendarMode.create };
+    case CalendarAction.edit:
+      return { mode: CalendarMode.edit, event: null, message: "" };
+    case CalendarAction.editEvent:
+      return {
+        ...state,
+        mode: CalendarMode.editEvent,
+        event: action.event ? action.event : null,
+      };
+    case CalendarAction.delete:
+      return {
+        ...state,
+        mode: CalendarMode.delete,
+        event: action.event ? action.event : null,
+      };
     case CalendarAction.reset:
-      return { mode: CalendarMode.default, message: "" };
+      return { mode: CalendarMode.default, message: "", event: null };
     case CalendarAction.success:
       return {
+        event: null,
         mode: CalendarMode.success,
         message: action.message ? action.message : "",
       };
     case CalendarAction.error:
       return {
+        event: null,
         mode: CalendarMode.error,
         message: action.message ? action.message : "",
       };
@@ -60,14 +82,68 @@ export default function Calendar() {
   const initialState = {
     mode: CalendarMode.default,
     message: "",
+    event: null,
   };
   const [state, dispatch] = React.useReducer(reducer, initialState);
+
+  const remove = async () => {
+    if (state.event) {
+      const res = await deleteEvent(state.event);
+      if (res === "Success")
+        dispatch({
+          type: CalendarAction.success,
+          message: "The event was successfully deleted.",
+        });
+      else
+        dispatch({
+          type: CalendarAction.error,
+          message:
+            "We ran into an error deleting that event. Please try again.",
+        });
+    } else {
+      dispatch({
+        type: CalendarAction.error,
+        message:
+          "We couldn't find the event you want to delete. Please try again.",
+      });
+    }
+  };
 
   return (
     <>
       <Head>
         <title>Admin - Manage the NH DECA Calendar</title>
       </Head>
+
+      {state.mode === CalendarMode.delete && (
+        <Modal
+          open={state.mode === CalendarMode.delete && state.event !== null}
+          onClose={() => dispatch({ type: CalendarAction.edit })}
+          center
+        >
+          <div className="flex items-center justify-center p-10 space-x-4">
+            <button
+              className="white-rounded"
+              onClick={() => dispatch({ type: CalendarAction.edit })}
+            >
+              Cancel
+            </button>
+            <button className="blue-rounded" onClick={remove}>
+              Delete
+            </button>
+          </div>
+        </Modal>
+      )}
+
+      {state.mode === CalendarMode.editEvent && (
+        <Modal
+          open={state.mode === CalendarMode.editEvent && state.event !== null}
+          onClose={() => dispatch({ type: CalendarAction.edit })}
+          center
+        >
+          <EditEventModal event={state.event} dispatch={dispatch} />
+        </Modal>
+      )}
 
       <AdminLayout>
         <>
