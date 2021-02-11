@@ -64,7 +64,7 @@ export default function Nav() {
                 <NavTooltip
                   hoverProps={aboutSecondary}
                   hover={aboutHover}
-                  prefix="about/"
+                  prefix="/about/"
                   pages={getPages(sections[0])}
                 />
               </NavLink>
@@ -77,7 +77,7 @@ export default function Nav() {
                 <NavTooltip
                   hoverProps={confSecondary}
                   hover={confHover}
-                  prefix="conferences/"
+                  prefix="/conferences/"
                   pages={getPages(sections[1])}
                 />
               </NavLink>
@@ -90,7 +90,7 @@ export default function Nav() {
                 <NavTooltip
                   hoverProps={membersSecondary}
                   hover={membersHover}
-                  prefix="members/"
+                  prefix="/members/"
                   pages={getPages(sections[2])}
                 />
               </NavLink>
@@ -103,7 +103,7 @@ export default function Nav() {
                 <NavTooltip
                   hoverProps={newsSecondary}
                   hover={newsHover}
-                  prefix="news/"
+                  prefix="/news/"
                   pages={getPages(sections[3])}
                 />
               </NavLink>

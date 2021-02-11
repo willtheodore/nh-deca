@@ -77,7 +77,6 @@ export default function Home({ homeContent, stories }: HomeProps) {
 interface BannerProps {
   banner: BannerSchema;
 }
-
 function Banner({ banner }: BannerProps) {
   return (
     <div className="flex flex-col bg-blue-800 w-screen tablet:items-center tablet:text-center items-start text-white px-4 py-8 tablet:py-12">
@@ -90,7 +89,6 @@ function Banner({ banner }: BannerProps) {
 interface PhotoAlbumPreviewProps {
   photos: string[];
 }
-
 function PhotoAlbumPreview({ photos }: PhotoAlbumPreviewProps) {
   const alt = "A preview photo for the NH DECA photo album";
 
@@ -107,7 +105,7 @@ function PhotoAlbumPreview({ photos }: PhotoAlbumPreviewProps) {
         ))}
         <ClearButton
           text="View Photos"
-          href="/photos"
+          href="/news/photo-album"
           styles="absolute bottom-5 right-1/2 transform translate-x-1/2"
         />
       </div>

@@ -20,6 +20,9 @@ module.exports = {
         "screen-1/4": "25vh",
         "screen-3/4": "75vh",
       },
+      minWidth: {
+        "screen-1/2": "50vw",
+      },
       width: {
         "screen-1/2": "50vw",
         "screen-1/3": "33vw",

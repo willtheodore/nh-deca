@@ -26,7 +26,7 @@ export default function Sidebar({ active, sections }: SidebarProps) {
           open ? (
             <DisclosureLinks
               open={open}
-              prefix="about"
+              prefix="/about"
               pages={getPages(sections[0])}
             />
           ) : (
@@ -41,7 +41,7 @@ export default function Sidebar({ active, sections }: SidebarProps) {
           open ? (
             <DisclosureLinks
               open={open}
-              prefix="members"
+              prefix="/members"
               pages={getPages(sections[1])}
             />
           ) : (
@@ -56,7 +56,7 @@ export default function Sidebar({ active, sections }: SidebarProps) {
           open ? (
             <DisclosureLinks
               open={open}
-              prefix="conferences"
+              prefix="/conferences"
               pages={getPages(sections[2])}
             />
           ) : (
@@ -71,7 +71,7 @@ export default function Sidebar({ active, sections }: SidebarProps) {
           open ? (
             <DisclosureLinks
               open={open}
-              prefix="news"
+              prefix="/news"
               pages={getPages(sections[3])}
             />
           ) : (

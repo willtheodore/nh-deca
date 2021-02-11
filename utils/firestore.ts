@@ -1,3 +1,4 @@
+import next from "next";
 import firebase from "./firebase.js";
 const db = firebase.firestore();
 const storage = firebase.storage();
@@ -299,5 +300,26 @@ export const getImageURL = async (path: string) => {
     return url;
   } catch (e) {
     console.log("Error getting image URL", e);
+  }
+};
+
+export const getPhotos = async (token: string | null) => {
+  try {
+    const ref = storage.ref().child("photos/");
+    const list = await ref.list({
+      maxResults: 9,
+      pageToken: token ? token : undefined,
+    });
+    const contents = list.items;
+    const nextToken = list.nextPageToken;
+    const photos: string[] = [];
+
+    for (const photoRef of contents) {
+      const url = await photoRef.getDownloadURL();
+      photos.push(url);
+    }
+    return [photos, nextToken];
+  } catch (e) {
+    console.log("Error getting photos for photo album", e);
   }
 };
