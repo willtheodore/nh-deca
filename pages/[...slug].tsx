@@ -3,7 +3,7 @@ import Head from "next/head";
 import * as React from "react";
 import marked from "marked";
 import Layout from "../components/layout";
-import { getImageURL, getPage, getPagePaths } from "../utils/firestore";
+import { getPage, getPagePaths } from "../utils/firestore";
 
 interface PageProps {
   heroURL?: string | null;

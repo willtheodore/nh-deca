@@ -36,12 +36,12 @@ export default function Sidebar({ active, sections }: SidebarProps) {
       />
 
       <DisclosureGroup
-        header="Members"
+        header="Conferences"
         render={(open) =>
           open ? (
             <DisclosureLinks
               open={open}
-              prefix="/members"
+              prefix="/conferences"
               pages={getPages(sections[1])}
             />
           ) : (
@@ -51,12 +51,12 @@ export default function Sidebar({ active, sections }: SidebarProps) {
       />
 
       <DisclosureGroup
-        header="Conferences"
+        header="Members"
         render={(open) =>
           open ? (
             <DisclosureLinks
               open={open}
-              prefix="/conferences"
+              prefix="/members"
               pages={getPages(sections[2])}
             />
           ) : (
@@ -79,6 +79,17 @@ export default function Sidebar({ active, sections }: SidebarProps) {
           )
         }
       />
+
+      <Link href="/contact">
+        <a
+          className={cn({
+            [styles.disclosureHeader]: true,
+            "mt-5": true,
+          })}
+        >
+          Contact
+        </a>
+      </Link>
     </div>
   );
 }
@@ -124,7 +135,7 @@ function DisclosureLinks({ open, prefix, pages }: DisclosureLinksProps) {
       })}
     >
       {pages.map((page) => (
-        <Link href={`${prefix}/${page.slug}`}>
+        <Link href={`${prefix}/${page.slug}`} key={page.slug}>
           <a className="text-white" key={page.slug}>
             <li className="mt-1" key={page.slug}>
               {page.label}

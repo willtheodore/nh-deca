@@ -13,7 +13,7 @@ import PageEditor from "../../components/admin/pageEditor";
 import { getPagesBySection, Page } from "../../utils/firestore";
 
 interface PageValues {
-  section: "about" | "members" | "conferences" | "news" | "home";
+  section: "about" | "members" | "conferences" | "news" | "home" | "contact";
   page: string;
 }
 
@@ -39,6 +39,8 @@ export default function Pages() {
       setEditSlug(slug);
     } else if (values.section === "home") {
       setEditSlug("home");
+    } else if (values.section === "contact") {
+      setEditSlug("contact");
     }
   };
 
@@ -74,8 +76,8 @@ export default function Pages() {
                 <option value="about">About</option>
                 <option value="members">Members</option>
                 <option value="conferences">Conferences</option>
-                <option value="news">News</option>
                 <option value="home">Home</option>
+                <option value="contact">Contact</option>
               </Field>
               <PageSelectField
                 name="page"
@@ -109,7 +111,7 @@ function PageSelectField(props: any) {
   const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
-    if (section && section !== "home") {
+    if (section && section !== "home" && section !== "contact") {
       setLoading(true);
       getOptions();
     }
@@ -127,7 +129,7 @@ function PageSelectField(props: any) {
       <img className="animate-spin ml-2" src="/svg/cached.svg" alt="loading" />
     );
 
-  if (props.options !== null && section !== "home")
+  if (props.options !== null && section !== "home" && section !== "contact")
     return (
       <select {...field} {...props}>
         {props.options.map((page: Page) => (
