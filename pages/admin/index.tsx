@@ -7,7 +7,7 @@ import { AuthContext } from "../../utils/auth";
 export default function AdminHome() {
   const user = React.useContext(AuthContext);
 
-  if (user === null) return <SignIn />;
+  if (!user) return <SignIn />;
 
   return (
     <>

@@ -4,14 +4,17 @@ import AdminNav from "./adminNav";
 
 interface AdminLayoutProps {
   children: React.ReactChild;
+  signIn?: boolean;
 }
 
-export default function AdminLayout({ children }: AdminLayoutProps) {
+export default function AdminLayout({ children, signIn }: AdminLayoutProps) {
   const user = React.useContext(AuthContext);
   return (
     <>
-      {user !== null && <AdminNav />}
-      <div className="container mx-auto mt-20">{children}</div>
+      {user && <AdminNav />}
+      {(signIn || user) && (
+        <div className="container mx-auto mt-20">{children}</div>
+      )}
     </>
   );
 }

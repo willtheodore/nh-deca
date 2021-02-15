@@ -10,7 +10,7 @@ export default function SignIn() {
   const [mode, setMode] = React.useState<"signIn" | "create">("signIn");
 
   return (
-    <AdminLayout>
+    <AdminLayout signIn>
       <div className={styles.wrapper}>
         <h1 className={styles.header}>
           {mode === "signIn" ? "Admin Login" : "Create An Account"}

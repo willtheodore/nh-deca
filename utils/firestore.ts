@@ -1,4 +1,3 @@
-import next from "next";
 import firebase from "./firebase.js";
 const db = firebase.firestore();
 const storage = firebase.storage();
@@ -205,6 +204,18 @@ export const getValidationCode = async () => {
     }
   } catch (e) {
     console.log("Error getting validation code", e);
+  }
+};
+
+export const setValidationCode = async (code: string) => {
+  try {
+    await db.collection("adminData").doc("validationCode").update({
+      code,
+    });
+    return "Success";
+  } catch (e) {
+    console.log("Error getting validation code", e);
+    return "Error";
   }
 };
 

@@ -17,8 +17,7 @@ export default function AdminNav() {
         <AdminNavLink slug="/admin/calendar" label="Calendar" />
         <AdminNavLink slug="/admin/sections" label="sections" />
         <AdminNavLink slug="/admin/pages" label="pages" />
-        <AdminNavLink slug="/admin/photos" label="photos" />
-        <AdminNavLink slug="/admin/adminCode" label="admin Code" />
+        <AdminNavLink slug="/admin/admin-code" label="admin Code" />
         <button
           className="px-6 py-2 bg-gray-100 rounded-md text-decaBlue inline uppercase  tracking-wider hover:bg-blue-100 transition duration-300"
           onClick={signOut}

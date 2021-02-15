@@ -3,12 +3,11 @@ import * as React from "react";
 import Layout from "../../components/layout";
 import { fetchMedia } from "../../utils/twitter";
 
-interface TwitterMediaObject {
+export interface TwitterMediaObject {
   media_key: string;
   type?: string;
   url: string;
 }
-interface PhotosProps {}
 export default function Photos() {
   const [photos, setPhotos] = React.useState<TwitterMediaObject[]>([]);
   const [token, setToken] = React.useState<string | null>(null);
