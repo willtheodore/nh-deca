@@ -180,8 +180,9 @@ export const getPagePaths = async () => {
       const section = sectionSnapshot.data();
       const prefix = sectionSnapshot.id;
       for (const slug in section) {
-        console.log(prefix, slug);
-        paths.push([prefix, slug]);
+        if (prefix !== "news") {
+          paths.push([prefix, slug]);
+        }
       }
     });
     console.log("Returning paths:", paths);
