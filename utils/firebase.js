@@ -4,9 +4,6 @@ import "firebase/firestore";
 import "firebase/functions";
 import "firebase/storage";
 
-console.log(process.env.API_KEY);
-const key = process.env.API_KEY;
-
 var firebaseConfig = {
   apiKey: "AIzaSyCoMOIGr5px4OPT32HKRVebz3AC-Q0nTcY",
   authDomain: "nh-deca.firebaseapp.com",
