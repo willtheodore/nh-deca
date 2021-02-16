@@ -13,32 +13,31 @@ import { Field, Form, Formik, FormikValues } from "formik";
 import * as Yup from "yup";
 import Head from "next/head";
 
-interface SectionsProps {
-  sections: Section[];
-}
-
-export async function getStaticProps() {
-  const sections = await getSections();
-
-  return {
-    props: {
-      sections: sections ? sections : null,
-    },
-  };
-}
-
 const schema = Yup.object().shape({
   label: Yup.string().required("Field is required"),
 });
 
-export default function Sections({ sections }: SectionsProps) {
+export default function Sections() {
   const [activeSection, setActiveSection] = React.useState<number>(0);
   const [pages, setPages] = React.useState<Page[] | null>(null);
+  const [sections, setSections] = React.useState<Section[] | null>(null);
   const [done, setDone] = React.useState(false);
 
   React.useEffect(() => {
-    const p = getPages(sections[activeSection]);
-    setPages(p);
+    init();
+  }, []);
+  const init = async () => {
+    const res = await getSections();
+    if (res) {
+      setSections(res);
+    }
+  };
+
+  React.useEffect(() => {
+    if (sections) {
+      const p = getPages(sections[activeSection]);
+      setPages(p);
+    }
   }, [activeSection]);
 
   const handleAdd = async (values: FormikValues) => {
@@ -54,7 +53,7 @@ export default function Sections({ sections }: SectionsProps) {
   };
 
   const swap = async (index1: number, index2: number) => {
-    if (pages) {
+    if (pages && sections) {
       await swapPages(
         ["about", "conferences", "members"][activeSection],
         sections[activeSection],
@@ -66,7 +65,7 @@ export default function Sections({ sections }: SectionsProps) {
   };
 
   const remove = async (index: number) => {
-    if (pages) {
+    if (pages && sections) {
       await removePageAtIndex(
         ["about", "conferences", "members"][activeSection],
         sections[activeSection],
