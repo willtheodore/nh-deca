@@ -1,5 +1,6 @@
 import firebase from "firebase";
 import fire from "./firebase";
+import { rebuild } from "./firestore";
 const db = fire.firestore();
 
 interface NewsArticleInit {
@@ -186,6 +187,7 @@ export async function fetchArticlesWithTags(tags: string[]) {
 export async function createArticle(article: NewsArticle) {
   try {
     await db.collection("articles").withConverter(newsConverter).add(article);
+    await rebuild();
     return "Success";
   } catch (e) {
     console.log("Error creating a news article", e);
@@ -217,6 +219,7 @@ export async function searchArticles(query: string): Promise<SearchResults> {
 export async function deleteArticle(id: string) {
   try {
     await db.collection("articles").doc(id).delete();
+    await rebuild();
     return "Success";
   } catch (e) {
     console.log("Error deleting article", e);
@@ -231,6 +234,7 @@ export async function editArticle(article: NewsArticle) {
       .doc(article.id!)
       .withConverter(newsConverter)
       .set(article);
+    await rebuild();
     return "Success";
   } catch (e) {
     console.log("Error saving changes to article", e);

@@ -46,6 +46,8 @@ export const addPageToSection = async (
           index: index,
         },
       });
+
+    await rebuild();
   } catch (e) {
     console.log("Error adding page to section", e);
   }
@@ -76,6 +78,8 @@ export const swapPages = async (
       }
     }
     await db.collection("sections").doc(section).set(newPages);
+
+    await rebuild();
   } catch (e) {
     console.log("Error changing page order", e);
   }
@@ -110,6 +114,8 @@ export const removePageAtIndex = async (
     await db.collection("sections").doc(section).set(newPages);
     const slug = section.concat(`\\${pageSlug}`);
     await db.collection("content").doc(slug).delete();
+
+    await rebuild();
   } catch (e) {
     console.log("Error removing a page from the section", e);
   }
@@ -147,6 +153,8 @@ export const updateHomeContent = async (
           content: bannerContent,
         },
       });
+
+    await rebuild();
   } catch (e) {
     console.log("Error updating home content", e);
   }
@@ -286,6 +294,9 @@ export const updatePageContent = async (
           index,
         },
       });
+
+    await rebuild();
+
     return "Success";
   } catch (e) {
     console.log("Error updating content", e);
@@ -335,3 +346,14 @@ export const getPhotos = async (token: string | null) => {
     console.log("Error getting photos for photo album", e);
   }
 };
+
+export async function rebuild() {
+  // Rebuild static parts of site.
+  const xhr = new XMLHttpRequest();
+  xhr.open(
+    "POST",
+    "https://api.vercel.com/v1/integrations/deploy/prj_c9TomFg0BO77pPplzVz4gMtbiCxm/eZmVAAgD2y",
+    true
+  );
+  xhr.send();
+}
