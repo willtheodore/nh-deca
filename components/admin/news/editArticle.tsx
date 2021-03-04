@@ -105,6 +105,7 @@ export default function EditArticle({
             ADD
           </button>
         </div>
+
         {tags.length > 0 && (
           <div className="flex items-center mb-10 space-x-2">
             <p className="text-white">Applied Tags:</p>

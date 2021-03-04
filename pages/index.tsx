@@ -62,8 +62,8 @@ export default function Home({ homeContent, stories }: HomeProps) {
             </div>
             <PhotoAlbumPreview
               photos={[
-                "images/highlight1.jpg",
-                "images/highlight2.png",
+                "images/h1.jpg",
+                "images/h2.jpg",
                 "images/highlight3.jpg",
               ]}
             />

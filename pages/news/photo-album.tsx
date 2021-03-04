@@ -64,7 +64,7 @@ export default function Photos() {
         <title>NH DECA Photo Album</title>
       </Head>
 
-      <Layout home="/images/highlight1.jpg" title="Photo Album">
+      <Layout home="/images/h14.jpg" title="Photo Album">
         <>
           <div className="flex justify-center pt-10">
             <p className="text-3xl uppercase px-10 py-5 font-bold bg-white rounded-md text-decaBlue text-center">

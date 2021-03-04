@@ -64,7 +64,7 @@ export default function NewsFeed() {
           <title>NH DECA - News Feed</title>
         </Head>
 
-        <Layout home="/images/highlight3.jpg" title="News Feed">
+        <Layout home="/images/h9.jpg" title="News Feed">
           {error ? (
             <ErrorMessage onClick={() => setError(null)} message={error} />
           ) : (
@@ -80,7 +80,7 @@ export default function NewsFeed() {
         <title>NH DECA - News Feed</title>
       </Head>
 
-      <Layout home="/images/highlight3.jpg" title="News Feed">
+      <Layout home="/images/h9.jpg" title="News Feed">
         <>
           <Modal open={filterOpen} onClose={() => setFilterOpen(false)} center>
             <FilterModal

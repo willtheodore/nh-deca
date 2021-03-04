@@ -9,9 +9,16 @@ interface LayoutProps {
   hero?: string | null;
   home?: string;
   title?: string;
+  position?: string;
 }
 
-export default function Layout({ hero, children, title, home }: LayoutProps) {
+export default function Layout({
+  hero,
+  children,
+  title,
+  home,
+  position,
+}: LayoutProps) {
   const [heroURL, setHeroURL] = React.useState<string | null>(null);
 
   React.useEffect(() => {
@@ -31,7 +38,9 @@ export default function Layout({ hero, children, title, home }: LayoutProps) {
       {heroURL || home ? (
         <div className="w-full absolute top-0 transform translate-y-16 tablet:transform-none tablet:h-screen-3/4 h-screen-1/3">
           <img
-            className="object-cover h-full w-full"
+            className={
+              "object-cover h-full w-full" + (position ? position : "")
+            }
             alt="Hero Image - NH DECA"
             src={heroURL ? heroURL : home}
           />
