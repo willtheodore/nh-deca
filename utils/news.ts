@@ -111,7 +111,7 @@ export async function fetchArticles(limit: number) {
   try {
     const articles = await db
       .collection("articles")
-      .orderBy("timestamp", "asc")
+      .orderBy("timestamp", "desc")
       .withConverter(newsConverter)
       .limit(limit)
       .get();
@@ -130,7 +130,7 @@ export async function fetchArticlesAfter(date: Date, limit: number) {
   try {
     const articles = await db
       .collection("articles")
-      .orderBy("timestamp", "asc")
+      .orderBy("timestamp", "desc")
       .withConverter(newsConverter)
       .startAfter(firebase.firestore.Timestamp.fromDate(date))
       .limit(limit)
@@ -152,7 +152,7 @@ export async function fetchArticlesBetween(sDate: Date, eDate: Date) {
       .collection("articles")
       .where("timestamp", ">=", firebase.firestore.Timestamp.fromDate(sDate))
       .where("timestamp", "<=", firebase.firestore.Timestamp.fromDate(eDate))
-      .orderBy("timestamp", "asc")
+      .orderBy("timestamp", "desc")
       .withConverter(newsConverter)
       .get();
 
@@ -171,6 +171,7 @@ export async function fetchArticlesWithTags(tags: string[]) {
     const articles = await db
       .collection("articles")
       .where("tags", "array-contains-any", tags)
+      .orderBy("timestamp", "desc")
       .withConverter(newsConverter)
       .get();
 
